@@ -87,7 +87,7 @@ namespace EmployeeTest.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateVideos(string vidName, string vid)
+        public JsonResult UpdateVideos(string vidName, string vid, bool isCompleted)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -100,7 +100,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 1, UserId);
+                        _videoUtility.UpdateVideo(vid, 1, UserId, isCompleted);
                     }
                 }
 
@@ -108,7 +108,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 2, UserId);
+                        _videoUtility.UpdateVideo(vid, 2, UserId, isCompleted);
                     }
                 }
 
@@ -116,7 +116,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 3, UserId);
+                        _videoUtility.UpdateVideo(vid, 3, UserId, isCompleted);
                     }
                 }
 
@@ -124,7 +124,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 4, UserId);
+                        _videoUtility.UpdateVideo(vid, 4, UserId, isCompleted);
                     }
                 }
 
@@ -132,7 +132,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 5, UserId);
+                        _videoUtility.UpdateVideo(vid, 5, UserId, isCompleted);
                     }
                 }
 
@@ -140,7 +140,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 6, UserId);
+                        _videoUtility.UpdateVideo(vid, 6, UserId, isCompleted);
                     }
                 }
 
@@ -148,7 +148,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 7, UserId);
+                        _videoUtility.UpdateVideo(vid, 7, UserId, isCompleted);
                     }
                 }
 
@@ -156,7 +156,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 8, UserId);
+                        _videoUtility.UpdateVideo(vid, 8, UserId, isCompleted);
                     }
                 }
 
@@ -164,7 +164,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 9, UserId);
+                        _videoUtility.UpdateVideo(vid, 9, UserId, isCompleted);
                     }
                 }
 
@@ -172,7 +172,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 10, UserId);
+                        _videoUtility.UpdateVideo(vid, 10, UserId, isCompleted);
                     }
                 }
 
@@ -180,7 +180,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 11, UserId);
+                        _videoUtility.UpdateVideo(vid, 11, UserId, isCompleted);
                     }
                 }
 
@@ -188,7 +188,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 12, UserId);
+                        _videoUtility.UpdateVideo(vid, 12, UserId, isCompleted);
                     }
                 }
 
@@ -196,7 +196,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 13, UserId);
+                        _videoUtility.UpdateVideo(vid, 13, UserId, isCompleted);
                     }
                 }
 
@@ -204,7 +204,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 14, UserId);
+                        _videoUtility.UpdateVideo(vid, 14, UserId, isCompleted);
                     }
                 }
 
@@ -212,7 +212,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 15, UserId);
+                        _videoUtility.UpdateVideo(vid, 15, UserId, isCompleted);
                     }
                 }
 
@@ -220,7 +220,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 16, UserId);
+                        _videoUtility.UpdateVideo(vid, 16, UserId, isCompleted);
                     }
                 }
 
@@ -232,6 +232,8 @@ namespace EmployeeTest.Controllers
 
             return Json(response);
         }
+
+        
 
         public async Task<IActionResult> Download(string id)
         {

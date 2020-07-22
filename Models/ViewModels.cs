@@ -259,6 +259,30 @@ namespace EmployeeTest.Models
         public decimal? Video14Duration { get; set; }
         public decimal? Video15Duration { get; set; }
         public decimal? Video16Duration { get; set; }
+        public bool Video1Completed { get; set; }
+        public bool Video2Completed { get; set; }
+        public bool Video3Completed { get; set; }
+        public bool Video4Completed { get; set; }
+        public bool Video5Completed { get; set; }
+        public bool Video6Completed { get; set; }
+        public bool Video7Completed { get; set; }
+        public bool Video8Completed { get; set; }
+        public bool Video9Completed { get; set; }
+        public bool Video10Completed { get; set; }
+        public bool Video11Completed { get; set; }
+        public bool Video12Completed { get; set; }
+        public bool Video13Completed { get; set; }
+        public bool Video14Completed { get; set; }
+        public bool Video15Completed { get; set; }
+        public bool Video16Completed { get; set; }
+        
+    }
+
+    public class VideoTimeDuration
+    {
+        public decimal Duration { get; set; }
+        public bool Completed { get; set; }
+
     }
 
     public class AttendantViewModel
@@ -424,4 +448,13 @@ namespace EmployeeTest.Models
         public string Status { get;  set; }
     }
 
+    public class AttendentTestVideoViewModel
+    {
+        public int Id { get; set; }
+        public int VideoId { get; set; }
+        public decimal Duration { get; set; }
+        public int UserId { get; set; }
+        public bool IsCompleted { get; set; }
+    }
+  
 }

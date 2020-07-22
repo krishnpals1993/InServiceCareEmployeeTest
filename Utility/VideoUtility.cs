@@ -21,20 +21,27 @@ namespace EmployeeTest.Utility
             _dbContext = dbContext;
         }
 
-        public void UpdateVideo(string video, int videoId, int UserId)
+        public void UpdateVideo(string video, int videoId, int UserId, bool isCompleted)
         {
-              
-            {
-                var checkVid1 = _dbContext.tbl_AttendentTestVideos.Where(w => w.UserId == UserId && w.VideoId == videoId).FirstOrDefault();
+               var checkVid1 = _dbContext.tbl_AttendentTestVideos.Where(w => w.UserId == UserId && w.VideoId == videoId).FirstOrDefault();
                 if (checkVid1 != null)
                 {
+                if (Convert.ToDecimal(video)> checkVid1.Duration)
+                {
                     checkVid1.Duration = Convert.ToDecimal(video);
-                    _dbContext.SaveChanges();
+                   
 
-                    var checkVidCount = _dbContext.tbl_AttendentTestVideos.Where(w => w.UserId == UserId && w.VideoId == videoId).Count();
+                }
+                if (isCompleted)
+                {
+                    checkVid1.IsCompleted = true;
+                }
+                _dbContext.SaveChanges();
+
+                var checkVidCount = _dbContext.tbl_AttendentTestVideos.Where(w => w.UserId == UserId && w.VideoId == videoId).Count();
                     if (checkVidCount > 1)
                     {
-                        var checkVid2 = _dbContext.tbl_AttendentTestVideos.Where(w => w.UserId == UserId && w.VideoId == videoId).FirstOrDefault();
+                        var checkVid2 = _dbContext.tbl_AttendentTestVideos.Where(w => w.UserId == UserId && w.VideoId == videoId).LastOrDefault();
                         _dbContext.tbl_AttendentTestVideos.Remove(checkVid2);
                         _dbContext.SaveChanges();
 
@@ -46,24 +53,26 @@ namespace EmployeeTest.Utility
                     {
                         VideoId = videoId,
                         UserId = UserId,
-                        Duration = Convert.ToDecimal(video)
+                        Duration = Convert.ToDecimal(video),
+                        IsCompleted = false
                     };
 
                     _dbContext.tbl_AttendentTestVideos.Add(checkVid1);
                     _dbContext.SaveChanges();
                 }
-            }
         }
 
-        public decimal GetVideo(List<AttendentTestVideo> attendantVideoList,  int videoId, int UserId)
+        public VideoTimeDuration GetVideo(List<AttendentTestVideo> attendantVideoList,  int videoId, int UserId)
         {
             decimal duration = 0;
+            bool IsCompleted = false;
             var checkVideo = attendantVideoList.Where(w => w.UserId == UserId && w.VideoId == videoId).FirstOrDefault();
             if (checkVideo!=null)
             {
                 duration = checkVideo.Duration;
+                IsCompleted = checkVideo.IsCompleted ?? false;
             }
-            return duration;
+            return  new VideoTimeDuration() { Duration = duration, Completed = IsCompleted  } ;
         }
 
         public decimal GetVideoDuration(List<Testvideo> attendantVideoList, int videoId)

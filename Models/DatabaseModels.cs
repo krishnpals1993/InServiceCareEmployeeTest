@@ -209,9 +209,9 @@ namespace EmployeeTest.Models
         public int VideoId { get; set; }
         public decimal Duration { get; set; }
         public int UserId { get; set; }
+        public bool? IsCompleted { get; set; }
 
-
-    }
+   }
 
     [Table("seasons")]
     public class Season

@@ -65,15 +65,15 @@ namespace EmployeeTest.Controllers
 
                             foreach (var test in TestList)
                             {
-                                var checkTotalDuration = _dbContext.tbl_Testvideos.Where(w => w.TestId == test.Id).Sum(s => s.Duration) * 60;
-                                var watchedTotalDuration = (from userVideo in _dbContext.tbl_AttendentTestVideos
+                                var totalVideos = _dbContext.tbl_Testvideos.Count();
+                                var watchedVideos = (from userVideo in _dbContext.tbl_AttendentTestVideos
                                                             join testVideo in _dbContext.tbl_Testvideos
                                                             on userVideo.VideoId equals testVideo.Id
                                                             where userVideo.UserId == Convert.ToInt32(ds.Tables[0].Rows[0]["Userid"])
-                                                            && testVideo.TestId == test.Id
-                                                            select userVideo.Duration).Sum();
+                                                            && testVideo.TestId == test.Id && userVideo.IsCompleted == true
+                                                     select testVideo.Id).Count();
 
-                                if (Math.Round(checkTotalDuration) <= Math.Round(watchedTotalDuration))
+                                if (totalVideos == watchedVideos)
                                 {
                                     testCount++;
                                 }
@@ -98,6 +98,7 @@ namespace EmployeeTest.Controllers
             }
             catch (Exception ex)
             {
+
             }
 
             return View(model);
