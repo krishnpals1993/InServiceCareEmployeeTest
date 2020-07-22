@@ -1,7 +1,7 @@
 ﻿@model EmployeeTest.Models.SeasonViewModel
 
 @{
-    ViewData["Title"] = "Add Season";
+    ViewData["Title"] = "Edit Season";
 }
 @using Microsoft.Extensions.Options;
 @inject IOptions<Appsettings> Settings
@@ -15,9 +15,9 @@
                     <h3>@ViewData["Title"]</h3>
                 </div>
                 <div class="ibox-content">
-                    <form method="post" asp-action="Add">
+                    <form method="post" asp-action="Edit">
 
-
+                        @Html.HiddenFor(h => h.Id)
                         <div class="row form-group ">
                             <div class="col-md-1">
                                 <label asp-for="Name" class="col-form-label"></label>
@@ -47,7 +47,7 @@
                                 <span asp-validation-for="StartDay" class="text-danger"></span>
                             </div>
                             <div class="col-md-1">
-                                <label   class="col-form-label">To</label>
+                                <label class="col-form-label">To</label>
                             </div>
                             <div class="col-md-3">
                                 <div class="input-group date" style="border-right: solid 1px #e7eaec">
@@ -70,7 +70,7 @@
                         }
                         @if (ViewBag.ErrorMessage != null)
                         {
-                            <p class="text-danger">@ViewBag.ErrorMessage</p>
+                            <p class="text-danger" >@ViewBag.ErrorMessage</p>
                         }
 
                         <div class="hr-line-dashed"></div>
@@ -116,6 +116,9 @@
                 maxViewMode: "months",
                 orientation: "bottom left",
             });
+
+            $('#StartDay').val('@Model.StartDay.ToString("dd-MMMM")');
+            $('#EndDay').val('@Model.EndDay.ToString("dd-MMMM")');
 
              var SuccessMessage = '@ViewBag.SuccessMessage';
         var ErrorMessage = '@ViewBag.ErrorMessage';

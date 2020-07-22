@@ -11,7 +11,7 @@
         <div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-title">
-                    <h3>User List</h3>
+                    <h3>Test List</h3>
                 </div>
 
                 <div class="ibox-content">
@@ -27,31 +27,42 @@
                                 <th>
                                     Status
                                 </th>
-                                
+                                <th>
+                                    Action
+                                </th>
+
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.SeasonName)
-                                    </td>
-                                    <td>
-                                        @if (item.IsActive ?? true)
-                                        {
-                                            <span class="badge badge-primary">Active</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge badge-danger">Deleted</span>
-                                        }
-                                    </td>
-                                    
-                                </tr>
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SeasonName)
+                                </td>
+                                <td>
+                                    @if (item.IsActive ?? true)
+                                    {
+                                        <span class="badge badge-primary">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-danger">Deleted</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.IsActive ?? true)
+                                    {
+                                        <span>
+                                            @Html.ActionLink("Edit", "Edit", "Test", new { id = item.Id }) |
+                                        </span>
+                                        <a href="#" onclick="deleteFun('@item.Id')">Delete</a>
+                                    }
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>
@@ -115,7 +126,44 @@
             });
         });
 
-        
+            function deleteFun(id) {
+
+            swal({
+                title: "Are you sure?",
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "No",
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes",
+                closeOnConfirm: false
+            },
+                function (isConfirm) {
+                    if (!isConfirm)
+                        return;
+
+                      $.ajax({
+                    url: "/Test/Delete",
+                    type: "POST",
+                    dataType: "json",
+                    data: { id: id },
+                    success: function (data) {
+                        if (data.Status=="1") {
+                            swal(data.Message, "", "success")
+                            setTimeout(function () {
+                                window.location.href = "@Settings.Value.WebBaseURL/Test/List";
+                            }, 750);
+
+                        }
+                        else {
+                              swal(data.Message, "", "error")
+                        }
+                    }
+                })
+
+                });
+
+        }
+
 
     </script>
 }

@@ -1,7 +1,7 @@
 ﻿@model EmployeeTest.Models.TestViewModel
 
 @{
-    ViewData["Title"] = "Add Test";
+    ViewData["Title"] = "Edit Test";
 }
 @using Microsoft.Extensions.Options;
 @inject IOptions<Appsettings> Settings
@@ -15,8 +15,8 @@
                     <h3>@ViewData["Title"]</h3>
                 </div>
                 <div class="ibox-content">
-                    <form method="post" asp-action="Add">
-
+                    <form method="post" asp-action="Edit">
+                        @Html.HiddenFor(h => h.Id)
 
                         <div class="row form-group ">
                             <div class="col-md-1">
@@ -37,16 +37,16 @@
                         </div>
 
 
-                    
 
-                       
+
+
                         @if (ViewBag.SuccessMessage != null)
                         {
                             <p class="text-primary">@ViewBag.SuccessMessage</p>
                         }
                         @if (ViewBag.ErrorMessage != null)
                         {
-                            <p class="text-danger">@ViewBag.ErrorMessage</p>
+                            <p class="text-danger"  >@ViewBag.ErrorMessage</p>
                         }
 
                         <div class="hr-line-dashed"></div>

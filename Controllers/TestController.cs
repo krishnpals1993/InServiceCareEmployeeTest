@@ -30,7 +30,7 @@ namespace EmployeeTest.Controllers
             int.TryParse(_session.GetString("UserId"), out UserId);
         }
 
-        public IActionResult Question(int id,int TestId)
+        public IActionResult Question(int id, int TestId)
         {
             TestQuestionViewModel model = new TestQuestionViewModel();
             DbfunctionUtility dbfunction = new DbfunctionUtility(_appSettings);
@@ -49,7 +49,7 @@ namespace EmployeeTest.Controllers
                     Choice4 = s.Choice4,
                     Choice5 = s.Choice5,
                     Answer = s.Answer,
-                    
+
 
                 }).ToList();
 
@@ -63,15 +63,15 @@ namespace EmployeeTest.Controllers
             }
             else
             {
-                var questionList = _testUtility.GetUserQuestions(UserId,TestId);
+                var questionList = _testUtility.GetUserQuestions(UserId, TestId);
                 model = questionList.Where(w => w.SeqNo == id).FirstOrDefault();
-                model.TestId =TestId;
+                model.TestId = TestId;
                 model.MaxSequenceId = questionList.LastOrDefault().SeqNo;
                 model.MinSequenceId = questionList.FirstOrDefault().SeqNo;
 
             }
 
-            model.TestName = _dbContext.tbl_Tests.Where(w=>w.Id == TestId).Select(s=>s.Name).FirstOrDefault();
+            model.TestName = _dbContext.tbl_Tests.Where(w => w.Id == TestId).Select(s => s.Name).FirstOrDefault();
 
             return View(model);
         }
@@ -82,7 +82,7 @@ namespace EmployeeTest.Controllers
             int TestId = model.TestId;
             DbfunctionUtility dbfunction = new DbfunctionUtility(_appSettings);
             TestUtility _testUtility = new TestUtility(_appSettings, _dbContext);
-            var checkUserTest = _dbContext.tbl_UserTests.Where(w => w.UserId == UserId && w.TestId == TestId  && w.IsReset == false).FirstOrDefault();
+            var checkUserTest = _dbContext.tbl_UserTests.Where(w => w.UserId == UserId && w.TestId == TestId && w.IsReset == false).FirstOrDefault();
             if (submit == "Save")
             {
 
@@ -125,7 +125,7 @@ namespace EmployeeTest.Controllers
 
                 }
 
-                var questionList = _testUtility.GetUserQuestions(UserId,TestId);
+                var questionList = _testUtility.GetUserQuestions(UserId, TestId);
 
                 if (model.SeqNo != model.MaxSequenceId)
                 {
@@ -139,7 +139,7 @@ namespace EmployeeTest.Controllers
             if (submit == "Previous")
             {
 
-                var questionList = _testUtility.GetUserQuestions(UserId,TestId);
+                var questionList = _testUtility.GetUserQuestions(UserId, TestId);
                 model = questionList.Where(w => w.SeqNo == model.SeqNo - 1).FirstOrDefault();
                 model.MaxSequenceId = questionList.LastOrDefault().SeqNo;
                 model.MinSequenceId = questionList.FirstOrDefault().SeqNo;
@@ -149,7 +149,7 @@ namespace EmployeeTest.Controllers
             if (submit == "Next")
             {
 
-                var questionList = _testUtility.GetUserQuestions(UserId,TestId);
+                var questionList = _testUtility.GetUserQuestions(UserId, TestId);
                 model = questionList.Where(w => w.SeqNo == model.SeqNo + 1).FirstOrDefault();
                 model.MaxSequenceId = questionList.LastOrDefault().SeqNo;
                 model.MinSequenceId = questionList.FirstOrDefault().SeqNo;
@@ -185,7 +185,7 @@ namespace EmployeeTest.Controllers
             _dbContext.tbl_UserTests.Add(userTest);
             _dbContext.SaveChanges();
 
-            return RedirectToAction("Question", "Test", new { id = 1, TestId = TestId});
+            return RedirectToAction("Question", "Test", new { id = 1, TestId = TestId });
 
         }
 
@@ -311,6 +311,7 @@ namespace EmployeeTest.Controllers
                          on test.SeasonId equals season.Id
                          select new TestViewModel
                          {
+                             Id = test.Id,
                              Name = test.Name,
                              SeasonName = season.Name,
                              IsActive = test.IsActive
@@ -372,6 +373,113 @@ namespace EmployeeTest.Controllers
                                 Id = s.Id
                             }).ToList();
             return View(test);
+        }
+
+        public ActionResult Edit(string id)
+        {
+            TestViewModel model = new TestViewModel();
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var testId = Convert.ToInt32(id);
+
+                    var checkTest = _dbContext.tbl_Tests.Where(w => w.Id == testId).FirstOrDefault();
+                    if (checkTest != null)
+                    {
+                        model.Id = checkTest.Id;
+                        model.Name = checkTest.Name;
+                        model.SeasonId = checkTest.SeasonId;
+                        model.SeasonList = _dbContext.tbl_Seasons.Where(w => w.IsActive == true)
+                          .Select(s => new SeasonViewModel
+                          {
+                              Name = s.Name,
+                              Id = s.Id
+                          }).ToList();
+
+                    }
+                    else
+                    {
+                        return RedirectToAction("List", "Test");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return View(model);
+
+        }
+
+        [HttpPost]
+        public ActionResult Edit(TestViewModel model)
+        {
+            try
+            {
+
+                if (ModelState.IsValid)
+                {
+
+                    var checkTest = _dbContext.tbl_Tests.Where(w => w.Name == model.Name && w.Id != model.Id).FirstOrDefault();
+                    if (checkTest == null)
+                    {
+                        var testDetail = _dbContext.tbl_Tests.Where(w => w.Id == model.Id).FirstOrDefault();
+
+                        testDetail.Name = model.Name;
+                        testDetail.SeasonId = model.SeasonId;
+                        testDetail.ModifiedBy = UserId;
+                        testDetail.ModifiedDate = DateTime.Now;
+                        _dbContext.SaveChanges();
+                        ViewBag.SuccessMessage = "Test updated successfully";
+
+
+                    }
+                    else
+                    {
+                        ViewBag.ErrorMessage = "Test name is already exists";
+
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public JsonResult Delete(string id)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                int iId = Convert.ToInt32(id);
+                QuestionViewModel model = new QuestionViewModel();
+                DbfunctionUtility dbfunction = new DbfunctionUtility(_appSettings);
+                var checkTest = _dbContext.tbl_UserTests.Where(w => w.TestId == iId).Count();
+                if (checkTest == 0)
+                {
+                    var query = " update tests set IsActive = 0   where Id ='" + id + "' ;";
+                    DataSet ds = dbfunction.GetDataset(query);
+                    response.Status = "1";
+                    response.Message = "Test deleted successfully";
+                }
+                else
+                {
+                    response.Status = "0";
+                    response.Message = "Test has been given by CareGiver for this test";
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return Json(response);
         }
 
         protected override void Dispose(bool disposing)

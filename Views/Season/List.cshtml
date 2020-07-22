@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<EmployeeTest.Models.SeasonViewModel>
 
 @{
-    ViewData["Title"] = "User List";
+    ViewData["Title"] = "Season List";
 }
 @using Microsoft.Extensions.Options;
 @inject IOptions<Appsettings> Settings
@@ -11,7 +11,7 @@
         <div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-title">
-                    <h3>User List</h3>
+                    <h3>Season List</h3>
                 </div>
 
                 <div class="ibox-content">
@@ -30,34 +30,44 @@
                                 <th>
                                     Status
                                 </th>
-                                
+                                <th>
+                                    Action
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </td>
-                                <td>
-                                    @item.StartDay.ToString("dd-MMMM")
-                                </td>
-                                <td>
-                                    @item.EndDay.ToString("dd-MMMM")
-                                </td>
-                                <th>
-                                    @if (item.IsActive ?? true)
-                                    {
-                                        <span class="badge badge-primary">Active</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge badge-danger">Deleted</span>
-                                    }
-                                </th>
-                                
-                            </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @item.StartDay.ToString("dd-MMMM")
+                                    </td>
+                                    <td>
+                                        @item.EndDay.ToString("dd-MMMM")
+                                    </td>
+                                    <td>
+                                        @if (item.IsActive ?? true)
+                                        {
+                                            <span class="badge badge-primary">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger">Deleted</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.IsActive ?? true)
+                                        {
+                                            <span>
+                                                @Html.ActionLink("Edit", "Edit", "Season", new { id = item.Id }) |
+                                            </span>
+                                            <a href="#" onclick="deleteFun('@item.Id')">Delete</a>
+                                        }
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -137,14 +147,17 @@
                         return;
 
                       $.ajax({
-                    url: "/User/Delete",
+                    url: "/Season/Delete",
                     type: "POST",
                     dataType: "json",
                     data: { id: id },
                     success: function (data) {
                         if (data.Status=="1") {
                             swal(data.Message, "", "success")
-                            window.location.href = "@Settings.Value.WebBaseURL/User/List";
+                            setTimeout(function () {
+                                window.location.href = "@Settings.Value.WebBaseURL/Season/List";
+                            }, 750);
+
                         }
                         else {
                               swal(data.Message, "", "error")
