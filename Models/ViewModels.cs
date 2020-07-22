@@ -278,8 +278,7 @@ namespace EmployeeTest.Models
 
     }
 
-
-    public class UserViewModel
+    public class UserViewModel 
     {
 
         public UserViewModel()
@@ -292,6 +291,7 @@ namespace EmployeeTest.Models
 
         [Required(ErrorMessage = "Please enter an email")]
         [Display(Name = "Email")]
+        [DataType(DataType.EmailAddress,ErrorMessage ="Please enter valid email")]
         [StringLength(50)]
         public string Email { get; set; }
         public string Username { get; set; }
@@ -299,7 +299,7 @@ namespace EmployeeTest.Models
         [Required(ErrorMessage = "Please enter password")]
         [Display(Name = "Password")]
         [MaxLength(15, ErrorMessage = "Password should be less then or equal to 15 characters long")]
-        [MinLength(6, ErrorMessage = "Password at least 6 characters long")]
+        [MinLength(4, ErrorMessage = "Password at least 6 characters long")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Please enter confirm password")]
@@ -316,10 +316,23 @@ namespace EmployeeTest.Models
         public DateTime? CreatedDate { get; set; }
         public int? ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
-
         public string RoleName { get; set; }
-    }
+        
+        [Display(Name ="First Name")]
+        [Required(ErrorMessage = "Please enter first name")]
+        public string FirstName { get; set; }
+        
+        public string MiddleName { get; set; }
 
+        [Display(Name = "Last Name")]
+        [Required(ErrorMessage = "Please enter last name")]
+        public string LastName { get; set; }
+
+        [Display(Name = "Employee No")]
+        [Required(ErrorMessage = "Please enter employee no")]
+        public string EmployeeNo { get; set; }
+
+    }
 
     public class RoleViewModel
     {

@@ -35,14 +35,50 @@
                             </div>
 
                         </div>
+                        <div id="divCareGiver" style="display:none">
+                            <div class="row form-group ">
+                                <div class="col-md-2">
+                                    <label asp-for="FirstName" class="col-form-label"></label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input asp-for="FirstName" class="form-control" placeholder="First Name" maxlength="100" />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label asp-for="MiddleName" class="col-form-label"></label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input asp-for="MiddleName" class="form-control" placeholder="Middle Name" maxlength="100" />
+                                    <span asp-validation-for="MiddleName" class="text-danger"></span>
+                                </div>
 
+                            </div>
+
+                            <div class="row form-group ">
+                                <div class="col-md-2">
+                                    <label asp-for="LastName" class="col-form-label"></label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input asp-for="LastName" class="form-control" placeholder="Last Name" maxlength="100" />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label asp-for="EmployeeNo" class="col-form-label"></label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input asp-for="EmployeeNo" class="form-control" placeholder="Employee No" maxlength="100" />
+                                    <span asp-validation-for="EmployeeNo" class="text-danger"></span>
+                                </div>
+
+                            </div>
+                        </div>
 
                         <div class="row form-group">
                             <div class="col-md-2">
                                 <label asp-for="Password" class="col-form-label"></label>
                             </div>
                             <div class="col-md-4">
-                               <input asp-for="Password" type="password" class="form-control" placeholder="Password" maxlength="15" />
+                                <input asp-for="Password" type="password" class="form-control" placeholder="Password" maxlength="15" />
                                 <span asp-validation-for="Password" class="text-danger"></span>
                             </div>
                             <div class="col-md-2">
@@ -54,7 +90,7 @@
                             </div>
                         </div>
 
-                       
+
                         @if (ViewBag.SuccessMessage != null)
                         {
                             <p class="text-primary">@ViewBag.SuccessMessage</p>
@@ -98,9 +134,29 @@
            setTimeout(function () { window.location.href = "@Settings.Value.WebBaseURL/User/List"; }, 750);
 
         }
-          if (ErrorMessage) {
+        if (ErrorMessage) {
             swal(ErrorMessage, "", "error");
         }
+
+            $("#FirstName").val(" ");
+            $("#MiddleName").val(" ");
+            $("#EmployeeNo").val(" ");
+
+        $("#RoleId").on("change", function () {
+            if ($("#RoleId").val() == "1") {
+                  $("#FirstName").val("");
+                  $("#MiddleName").val("");
+                  $("#EmployeeNo").val("");
+                  $("#divCareGiver").show();
+                }
+                else {
+                  $("#FirstName").val(" ");
+            $("#MiddleName").val(" ");
+            $("#EmployeeNo").val(" ");
+                    $("#divCareGiver").hide();
+                }
+            });
+
         });
     </script>
 }

@@ -41,7 +41,7 @@ namespace EmployeeTest.Controllers
                          on user.RoleId equals role.RoleId
                          select new UserViewModel
                          {
-                            // RoleId = role.RoleId,
+                             // RoleId = role.RoleId,
                              RoleName = role.Rolename,
                              UserId = user.UserId,
                              Username = user.Username,
@@ -60,7 +60,7 @@ namespace EmployeeTest.Controllers
         public ActionResult Add()
         {
             UserViewModel user = new UserViewModel();
-            user.RoleList = _dbContext.tbl_Roles.Where(w => w.IsActive == true && w.Rolename != "CareGiver")
+            user.RoleList = _dbContext.tbl_Roles.Where(w => w.IsActive == true)
                             .Select(s => new RoleViewModel
                             {
                                 Rolename = s.Rolename,
@@ -77,23 +77,37 @@ namespace EmployeeTest.Controllers
                 if (ModelState.IsValid)
                 {
                     var userId = Convert.ToInt32(id);
-                    model.RoleList = _dbContext.tbl_Roles.Where(w => w.IsActive == true && w.Rolename != "CareGiver")
+                    model.RoleList = _dbContext.tbl_Roles.Where(w => w.IsActive == true)
                           .Select(s => new RoleViewModel
                           {
                               Rolename = s.Rolename,
                               RoleId = s.RoleId
                           }).ToList();
-                    var checkUser = _dbContext.tbl_Users.Where(w => w.UserId == userId ).FirstOrDefault();
+                    var checkUser = _dbContext.tbl_Users.Where(w => w.UserId == userId).FirstOrDefault();
                     if (checkUser != null)
                     {
                         model.RoleId = checkUser.RoleId.ToString();
                         model.Username = checkUser.Username;
                         model.Email = checkUser.Email;
                         model.UserId = checkUser.UserId;
+
+                        if (model.RoleId == "1")
+                        {
+                            var checkCareGiver = _dbContext.tbl_Attendants.Where(w => w.UserId == model.UserId).FirstOrDefault();
+                            if (checkCareGiver != null)
+                            {
+                                model.FirstName = checkCareGiver.FirstName;
+                                model.MiddleName = checkCareGiver.MiddleName;
+                                model.LastName = checkCareGiver.LastName;
+                                model.EmployeeNo = checkCareGiver.EmployeeNo;
+                               
+                            }
+                        }
+
                     }
                     else
                     {
-                        return RedirectToAction("UserList", "UserSetting");
+                        return RedirectToAction("List", "User");
                     }
                 }
             }
@@ -130,6 +144,27 @@ namespace EmployeeTest.Controllers
 
                         _dbContext.tbl_Users.Add(user);
                         _dbContext.SaveChanges();
+
+                        if (model.iRoleId == 1)
+                        {
+                            Attendant attendant = new Attendant()
+                            {
+                                FirstName = model.FirstName,
+                                MiddleName = model.MiddleName,
+                                LastName = model.LastName,
+                                EmployeeNo = model.EmployeeNo,
+                                Email = model.Email,
+                                CreatedDate = DateTime.Now,
+                                CreatedBy = UserId,
+                                UserId = user.UserId
+
+                            };
+
+                            _dbContext.tbl_Attendants.Add(attendant);
+                            _dbContext.SaveChanges();
+                        }
+
+
                         ViewBag.SuccessMessage = "User added successfully";
                     }
                     else
@@ -163,11 +198,25 @@ namespace EmployeeTest.Controllers
                         userDetail.Username = model.Email;
                         userDetail.Email = model.Email;
                         userDetail.Password = model.Password;
-                        userDetail.RoleId =  Convert.ToInt32(model.RoleId); 
+                        userDetail.RoleId = Convert.ToInt32(model.RoleId);
                         userDetail.CreatedBy = UserId;
                         userDetail.CreatedDate = DateTime.Now;
                         _dbContext.SaveChanges();
                         ViewBag.SuccessMessage = "User updated successfully";
+
+                        if (model.RoleId == "1")
+                        {
+                            var checkCareGiver = _dbContext.tbl_Attendants.Where(w => w.UserId == model.UserId).FirstOrDefault();
+                            if (checkCareGiver != null)
+                            {
+                                checkCareGiver.FirstName = model.FirstName;
+                                checkCareGiver.MiddleName = model.MiddleName;
+                                checkCareGiver.LastName = model.LastName;
+                                checkCareGiver.EmployeeNo = model.EmployeeNo;
+                                checkCareGiver.Email = model.Email;
+                                _dbContext.SaveChanges();
+                            }
+                        }
                     }
                     else
                     {

@@ -82,7 +82,7 @@ namespace EmployeeTest.Models
         public decimal? Video1 { get; set; }
         public decimal? Video2 { get; set; }
         public decimal? Video3 { get; set; }
-
+        public int CreatedBy { get; set; }
     }
 
     [Table("import_attendants")]
