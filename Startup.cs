@@ -41,7 +41,7 @@ namespace EmployeeTest
             });
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(30);//You can set Time   
+                options.IdleTimeout = TimeSpan.FromMinutes(180);//You can set Time   
             });
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddControllersWithViews();
