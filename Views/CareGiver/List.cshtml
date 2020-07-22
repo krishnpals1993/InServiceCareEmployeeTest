@@ -1,0 +1,282 @@
+﻿@model IEnumerable<EmployeeTest.Models.EmployeeViewModel>
+
+@{
+    ViewData["Title"] = "CareGiver List";
+}
+@using Microsoft.Extensions.Options;
+@inject IOptions<Appsettings> Settings
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox" id="ibox1">
+                <div class="ibox-title">
+                    <h3>CareGiver List</h3>
+                    <div class="ibox-tools ibox-toolsCareGiver">
+                        @if (Model.Count() > 0)
+                        {
+                            <button class="btn btn-primary btn-sm ibox-toolsCareGiverBtn" onclick="sendEmails()">Send Registration Link To New CareGivers</button>
+                        }
+
+                    </div>
+                </div>
+
+
+                <div class="ibox-content">
+                    <div class="sk-spinner sk-spinner-fading-circle" style="height:50px;width:50px">
+                        <div class="sk-circle1 sk-circle"></div>
+                        <div class="sk-circle2 sk-circle"></div>
+                        <div class="sk-circle3 sk-circle"></div>
+                        <div class="sk-circle4 sk-circle"></div>
+                        <div class="sk-circle5 sk-circle"></div>
+                        <div class="sk-circle6 sk-circle"></div>
+                        <div class="sk-circle7 sk-circle"></div>
+                        <div class="sk-circle8 sk-circle"></div>
+                        <div class="sk-circle9 sk-circle"></div>
+                        <div class="sk-circle10 sk-circle"></div>
+                        <div class="sk-circle11 sk-circle"></div>
+                        <div class="sk-circle12 sk-circle"></div>
+                    </div>
+
+
+                    <form role="form">
+                        <div class="form-group row">
+
+                            <div class="col-lg-1 col-form-label dateFrom">Completion Date</div>
+                            <div class="col-lg-2">
+                                <div class="input-group date" style="border-right: solid 1px #e7eaec;width:105%">
+                                    <input type="text" class="form-control"
+                                           id="startDate"
+                                           placeholder="dd/mm/yyyy">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-1 col-form-label dateTo">To</div>
+                            <div class="col-lg-2">
+                                <div class="input-group date" style="border-right: solid 1px #e7eaec;width:105%">
+                                    <input type="text" class="form-control"
+                                           id="endDate"
+                                           placeholder="dd/mm/yyyy">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="input-group">
+                                    <span class="input-group-append">
+                                        <button onclick="search()" type="button" class="btn btn btn-primary"> <i class="fa fa-search"></i> Search</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <hr />
+
+                    <div id="ptView">
+                        @Html.Partial("_Table", Model)
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Styles {
+    <environment names="Development,Staging,Production">
+        <link rel="stylesheet" href="~/lib/dataTables/datatables.min.css" />
+        <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />
+        <link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    </environment>
+}
+
+@section Scripts {
+    <environment names="Development,Staging,Production">
+        <script src="~/lib/dataTables/datatables.min.js"></script>
+        <script src="~/lib/dataTables/dataTables.bootstrap4.min.js"></script>
+        <script src="~/lib/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    </environment>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".videoDuration").each(function (index, element) {
+
+                if ($(element).html().toString().trim() != "") {
+                    $(element).html(secondsToHms($(element).html()));
+                }
+
+            })
+            bindDatatable();
+
+            $('#startDate').datepicker({
+                weekStart: 1,
+                daysOfWeekHighlighted: "6,0",
+                autoclose: true,
+                todayHighlight: true,
+            });
+
+            $('#endDate').datepicker({
+                weekStart: 1,
+                daysOfWeekHighlighted: "6,0",
+                autoclose: true,
+                todayHighlight: true,
+            });
+
+        });
+
+        function sendEmail(email) {
+            $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+            $.ajax({
+                url: "/CareGiver/SendEmail",
+                type: "POST",
+                dataType: "json",
+                data: { email: email },
+                success: function (data) {
+                    swal(data, "", "success");
+                    $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+                },
+                error: function (data) {
+                    $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+                }
+
+            })
+
+        }
+        function sendEmailLogin(email) {
+            $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+            $.ajax({
+                url: "/CareGiver/sendEmailLogin",
+                type: "POST",
+                dataType: "json",
+                data: { email: email },
+                success: function (data) {
+                    swal(data, "", "success");
+                    $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+                },
+                error: function (data) {
+                    $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+                }
+
+            })
+
+        }
+        function sendEmails() {
+            $.ajax({
+                url: "/CareGiver/SendEmails",
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    swal(data, "", "success");
+                    $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+                },
+                error: function (data) {
+                    $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+                }
+            })
+        }
+
+        function search() {
+
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+            if ((!startDate) || (!endDate)) {
+                swal("Please select both dates", "", "error");
+                return;
+            }
+            console.log(startDate);
+            console.log(endDate);
+            if (startDate > endDate) {
+                swal("From date should be greater or equal to current date", "", "error");
+                return;
+            }
+
+
+            $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+            $.ajax({
+                url: "/CareGiver/GetCareGiverListByDate",
+                type: "POST",
+                dataType: "json",
+                data: { startDate: startDate, endDate: endDate },
+                success: function (data) {
+                    $("#ptView").html('').html(data.responseText);
+                    $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+                    bindDatatable();
+                },
+                error: function (data) {
+                    $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+                    $("#ptView").html('').html(data.responseText);
+                    bindDatatable();
+                }
+
+            })
+
+        }
+
+        function bindDatatable() {
+
+            $('#tbl').DataTable({
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy' },
+                    {
+                        extend: 'csv', exportOptions: {
+                            columns: [0, 1, 2, 3, 4]
+                        }
+                    },
+                    {
+                        extend: 'excel', title: 'CareGiverList'
+                    },
+
+                    {
+                        extend: 'pdf', title: 'CareGiverList',
+                        customize: function (doc) {
+                            doc.pageMargins = [10, 10, 10, 10];
+                            doc.defaultStyle.fontSize = 7;
+                            doc.styles.tableHeader.fontSize = 7;
+                            doc.styles.title.fontSize = 9;
+                            // Remove spaces around page title
+                            doc.content[0].text = "Standard Precautions HIPPA \n Emergency Preparedness Home Safety";
+                            doc.content[1].table.widths =
+                                Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                        }
+                    },
+
+                    {
+                        extend: 'print',
+                        customize: function (win) {
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    }
+                ],
+                "scrollX": true
+
+            });
+
+
+        }
+
+        function secondsToHms(d) {
+            d = Number(d);
+            var h = Math.floor(d / 3600);
+            var m = Math.floor(d % 3600 / 60);
+            var s = Math.floor(d % 3600 % 60);
+
+            var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+            var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+            var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+            return hDisplay + mDisplay + sDisplay;
+        }
+
+
+    </script>
+}

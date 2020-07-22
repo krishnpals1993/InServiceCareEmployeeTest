@@ -1,0 +1,363 @@
+﻿@{
+    ViewData["Title"] = "Videos";
+    var Status = ViewBag.Status;
+}
+@using Microsoft.Extensions.Options;
+@inject IOptions<Appsettings> Settings
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>Ethics & liability</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 1</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid1" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/1.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" id="vid2Panel">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 2</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid2" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/2.mp4" type="video/mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="ibox vid3Panel">
+        <div class="ibox-title">
+            <h5>Personal Care Hygiene Grooming</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-4 vid3Panel">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 1</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid3" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/3.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" id="vid4Panel">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 2</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid4" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/4.mp4" type="video/mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ibox vid5Panel">
+        <div class="ibox-title">
+            <h5>Case of an emergency</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-4 vid5Panel">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 1</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid5" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/5.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" id="vid6Panel">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 2</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid6" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/6.mp4" type="video/mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ibox vid7Panel">
+        <div class="ibox-title">
+            <h5>Patient Rights</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-4 vid7Panel">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 1</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid7" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/7.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" id="vid8Panel">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 2</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid8" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/8.mp4" type="video/mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ibox vid9Panel">
+        <div class="ibox-title">
+            <h5>Transfering Your Patient</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-4 vid9Panel">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 1</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid9" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/9.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ibox vid10Panel">
+        <div class="ibox-title">
+            <h5>Body Mechanics</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-4 vid10Panel">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 1</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid10" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/10.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ibox vid11Panel">
+        <div class="ibox-title">
+            <h5>Patient With Decreased Mobility</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-4 vid11Panel">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 1</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid11" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/11.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" id="vid12Panel">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 2</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid12" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/12.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" id="vid13Panel">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 3</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid13" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/13.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" id="vid14Panel">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 4</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid14" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/14.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ibox vid15Panel">
+        <div class="ibox-title">
+            <h5>Mobile App Setup</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-4 vid15Panel">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 1</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid15" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/15.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" id="vid16Panel">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 2</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid16" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/16.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+@section Styles {
+    <environment names="Development,Staging,Production">
+        <link rel="stylesheet" href="~/lib/dataTables/datatables.min.css" />
+        <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />
+    </environment>
+    <style>
+        video::-internal-media-controls-download-button {
+            display: none;
+        }
+
+        video::-webkit-media-controls-enclosure {
+            overflow: hidden;
+        }
+
+        video::-webkit-media-controls-panel {
+            width: calc(100% + 30px); /* Adjust as needed */
+        }
+    </style>
+}
+
+@section Scripts {
+    <environment names="Development,Staging,Production">
+        <script src="~/lib/dataTables/datatables.min.js"></script>
+        <script src="~/lib/dataTables/dataTables.bootstrap4.min.js"></script>
+        <script src="~/lib/sweetalert/dist/sweetalert.min.js"></script>
+    </environment>
+
+    <script type="text/javascript">
+
+
+    </script>
+
+}
+
+
+
+
+

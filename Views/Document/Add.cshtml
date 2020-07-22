@@ -1,0 +1,148 @@
+﻿@model EmployeeTest.Models.DocumentViewModel
+
+@{
+    ViewBag.Title = "Home Page";
+}
+@using Microsoft.Extensions.Options;
+
+@inject IOptions<Appsettings> Settings
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox " id="ibox1">
+                <div class="ibox-title">
+                    <h3>Add Document</h3>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="sk-spinner sk-spinner-fading-circle" style="height:50px;width:50px">
+                        <div class="sk-circle1 sk-circle"></div>
+                        <div class="sk-circle2 sk-circle"></div>
+                        <div class="sk-circle3 sk-circle"></div>
+                        <div class="sk-circle4 sk-circle"></div>
+                        <div class="sk-circle5 sk-circle"></div>
+                        <div class="sk-circle6 sk-circle"></div>
+                        <div class="sk-circle7 sk-circle"></div>
+                        <div class="sk-circle8 sk-circle"></div>
+                        <div class="sk-circle9 sk-circle"></div>
+                        <div class="sk-circle10 sk-circle"></div>
+                        <div class="sk-circle11 sk-circle"></div>
+                        <div class="sk-circle12 sk-circle"></div>
+                    </div>
+
+                    <form method="post" asp-action="Add" enctype="multipart/form-data">
+
+                        <div class="row form-group">
+                            <div class="col-lg-1">
+                                <label asp-for="Name" class="col-form-label"></label>
+                            </div>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Name" })
+                                <span asp-validation-for="Name" id="errName" class="text-danger" style="display:none">Please enter name</span>
+                            </div>
+
+                            <div class="col-lg-1">
+                                <label class="col-form-label">File</label>
+                            </div>
+
+                            <div class="col-md-5">
+                                <input type="file" name="file" id="fileControl" class="form-control" placeholder="Select File" />
+                            </div>
+
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-1">
+                                <label asp-for="Description" class="col-form-label"></label>
+                            </div>
+                            <div class="col-md-11">
+                                <textarea asp-for="Description" class="form-control " placeholder="Description" maxlength="1000">
+                                </textarea>
+
+                            </div>
+
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-1">
+                                <label   class="col-form-label">Season</label>
+                            </div>
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.SeasonId, new SelectList(Model.SeasonList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"), "Select Season", new { @class = "form-control", @placeholder = "Select Select" })
+                                <span asp-validation-for="SeasonId" id="errSeasonId" class="text-danger" style="display:none">Please select season</span>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group row">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <a class="btn btn-white btn-sm" asp-action="List">Cancel</a>
+                                <button class="btn btn-primary btn-sm" onclick="return openLoader()" type="submit">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section Styles {
+    <environment names="Development,Staging,Production">
+        <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />
+    </environment>
+}
+
+@section Scripts {
+    <environment names="Development,Staging,Production">
+        <script src="~/lib/sweetalert/dist/sweetalert.min.js"></script>
+    </environment>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+           var SuccessMessage = '@ViewBag.SuccessMessage';
+        var ErrorMessage = '@ViewBag.ErrorMessage';
+        if (SuccessMessage) {
+            swal(SuccessMessage, "", "success");
+           setTimeout(function () { window.location.href = "@Settings.Value.WebBaseURL/Document/List"; }, 1000);
+
+        }
+          if (ErrorMessage) {
+            swal(ErrorMessage, "", "error");
+        }
+
+
+        });
+
+        function openLoader() {
+            if (!$("#Name").val()) {
+                $("#errName").show();
+                return false;
+            }
+            else {
+                $("#errName").hide();
+            }
+
+            if (!$("#SeasonId").val()) {
+                $("#errSeasonId").show();
+                return false;
+            }
+            else {
+                $("#errSeasonId").hide();
+            }
+
+            
+
+            if (document.getElementById("fileControl").files.length == 0) {
+                swal("Please select file", "", "error");
+                return false;
+            }
+            else {
+                $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+              return true;
+            }
+
+        }
+
+    </script>
+}

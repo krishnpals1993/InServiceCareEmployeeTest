@@ -1,0 +1,78 @@
+﻿@model EmployeeTest.Models.TestPassingPercentageViewModel
+
+@{
+    ViewData["Title"] = "Test Passing Percentage";
+}
+@using Microsoft.Extensions.Options;
+
+@inject IOptions<Appsettings> Settings
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h3>@ViewData["Title"]</h3>
+                </div>
+                <div class="ibox-content">
+                    <form method="post" asp-action="PassingPercentage">
+
+
+                        <div class="row form-group">
+                            <div class="col-lg-1">
+                                <label asp-for="Value" class="col-form-label"></label>
+                            </div>
+                            <div class="col-md-2">
+                                <input asp-for="Value" class="form-control" placeholder="Percentage" />
+
+                            </div>
+
+                        </div>
+
+                        <span asp-validation-for="Value" class="text-danger"></span>
+
+                        
+
+
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group row">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <button class="btn btn-primary btn-sm" type="submit">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section styles
+{
+    <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />
+}
+@section Scripts {
+    <script src="~/lib/sweetalert/dist/sweetalert.min.js"></script>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+        var SuccessMessage = '@ViewBag.SuccessMessage';
+        var ErrorMessage = '@ViewBag.ErrorMessage';
+        if (SuccessMessage) {
+            swal(SuccessMessage, "", "success");
+
+
+        }
+          if (ErrorMessage) {
+            swal(ErrorMessage, "", "error");
+        }
+        });
+
+
+
+
+    </script>
+}

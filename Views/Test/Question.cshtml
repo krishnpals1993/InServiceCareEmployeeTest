@@ -1,0 +1,210 @@
+﻿@model EmployeeTest.Models.TestQuestionViewModel
+
+@{
+    ViewData["Title"] = "Test Question " + Model.SeqNo;
+}
+@using Microsoft.Extensions.Options;
+
+@inject IOptions<Appsettings> Settings
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h3>Test @Model.TestName</h3>
+                </div>
+                <div class="ibox-content">
+                    <form method="post" asp-action="Question">
+                        @Html.HiddenFor(h => h.QuestionId)
+                        @Html.HiddenFor(h => h.SequenceId)
+                        @Html.HiddenFor(h => h.SeqNo)
+                        @Html.HiddenFor(h => h.MaxSequenceId)
+                        @Html.HiddenFor(h => h.MinSequenceId)
+                        @Html.HiddenFor(h => h.Answer)
+                        @Html.HiddenFor(h => h.TestId)
+
+                        <div class="row form-group">
+                            <div class="col-lg-12">
+                                <label class="col-form-label">
+                                    Question. @Model.Question
+                                </label>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                                @Html.RadioButtonFor(m => m.UserAnswer, "1", new { @class = "form-control rdBtn" })
+                            </div>
+                            <div class="col-lg-11">
+                                <label class="col-form-label">@Model.Choice1</label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                                @Html.RadioButtonFor(m => m.UserAnswer, "2", new { @class = "form-control rdBtn" })
+                            </div>
+                            <div class="col-lg-11">
+                                <label class="col-form-label">@Model.Choice2</label>
+                            </div>
+                        </div>
+                        @if (Convert.ToString(Model.Choice3) != "")
+                        {
+                            <div class="form-group row">
+                                <div class="col-md-1">
+                                    @Html.RadioButtonFor(m => m.UserAnswer, "3", new { @class = "form-control rdBtn" })
+                                </div>
+                                <div class="col-lg-11">
+                                    <label class="col-form-label">@Model.Choice3</label>
+                                </div>
+                            </div>
+                        }
+                        @if (Convert.ToString(Model.Choice4) != "")
+                        {
+                            <div class="form-group row">
+                                <div class="col-md-1">
+                                    @Html.RadioButtonFor(m => m.UserAnswer, "4", new { @class = "form-control rdBtn" })
+                                </div>
+                                <div class="col-lg-11">
+                                    <label class="col-form-label">@Model.Choice4</label>
+                                </div>
+                            </div>
+                        }
+                        @if (Convert.ToString(Model.Choice5) != "")
+                        {
+                            <div class="form-group row">
+                                <div class="col-md-1">
+                                    @Html.RadioButtonFor(m => m.UserAnswer, "5", new { @class = "form-control rdBtn" })
+                                </div>
+                                <div class="col-lg-11">
+                                    <label class="col-form-label">@Model.Choice5</label>
+                                </div>
+                            </div>
+                        }
+
+
+
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group row">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                @if (Model.MinSequenceId < Model.SeqNo)
+                                {
+                                    <button class="btn btn-white btn-sm" value="Previous" name="submit" type="submit">Previous</button>
+                                }
+                                <button class="btn btn-primary btn-sm" value="Save" onclick="return checkValidation()" name="submit" type="submit">Save</button>
+                                @if (Model.MaxSequenceId > Model.SeqNo)
+                                {
+                                    <button class="btn btn-white btn-sm" value="Next" name="submit" type="submit">Next</button>
+                                }
+
+                                @if (Model.MaxSequenceId == Model.SeqNo)
+                                {
+                                    <button class="btn btn-primary btn-sm"
+                                            onclick="return confirmFinish()"
+                                            value="Finish" type="button">
+                                        Finish
+                                    </button>
+                                    <button style="display:none" class="btn btn-primary btn-sm" id="btnFinish"
+                                            value="Finish" name="submit" type="submit">
+                                        Finish
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section styles
+{
+    <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />
+    <style>
+        .rdBtn {
+            height: 30px !important;
+            width: 30px !important;
+            margin-left: 10px
+        }
+    </style>
+}
+@section Scripts {
+    <script src="~/lib/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+        var SuccessMessage = '@ViewBag.SuccessMessage';
+        var ErrorMessage = '@ViewBag.ErrorMessage';
+        if (SuccessMessage) {
+            swal(SuccessMessage, "", "success");
+
+
+
+        }
+          if (ErrorMessage) {
+            swal(ErrorMessage, "", "error");
+        }
+        });
+
+
+        function confirmFinish() {
+
+            swal({
+                title: "Are you sure to finish the test?",
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "No",
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes",
+                closeOnConfirm: false
+            },
+                function (isConfirm) {
+                    if (!isConfirm)
+                        return;
+
+                       $.ajax({
+                    url: "/Test/GetScore",
+                    type: "POST",
+                    dataType: "json",
+                    data: { id: $("#TestId").val() },
+                    success: function (data) {
+                        if (data.Status=="1") {
+                            swal(data.Message, "", "success")
+                            setTimeout(function () {
+                                $("#btnFinish").trigger("click");
+                            }, 500);
+
+                        }
+                        else {
+                              swal(data.Message, "", "error")
+                        }
+                    }
+                })
+
+
+
+
+                });
+
+                return false;
+
+        }
+
+        function checkValidation() {
+
+            if ($("input[name='UserAnswer']:checked").val()) {
+                return true
+            }
+            else {
+                  swal("Please select a choice", "", "error");
+                return false;
+            }
+
+        }
+
+
+
+    </script>
+}

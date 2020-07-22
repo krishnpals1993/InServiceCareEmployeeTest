@@ -1,0 +1,1214 @@
+﻿@model EmployeeTest.Models.CareGiverVideoViewModel
+@{
+    ViewData["Title"] = "Videos";
+    var Status = ViewBag.Status;
+}
+@using Microsoft.Extensions.Options;
+@inject IOptions<Appsettings> Settings
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>Ethics & liability</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 1</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid1" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/1.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" id="vid2Panel" style="display:none">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 2</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid2" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/2.mp4" type="video/mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="ibox vid3Panel">
+        <div class="ibox-title">
+            <h5>Personal Care Hygiene Grooming</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-4 vid3Panel" style="display:none">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 1</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid3" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/3.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" id="vid4Panel" style="display:none">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 2</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid4" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/4.mp4" type="video/mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ibox vid5Panel">
+        <div class="ibox-title">
+            <h5>Case of an emergency</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-4 vid5Panel" style="display:none">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 1</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid5" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/5.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" id="vid6Panel" style="display:none">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 2</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid6" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/6.mp4" type="video/mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ibox vid7Panel">
+        <div class="ibox-title">
+            <h5>Patient Rights</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-4 vid7Panel" style="display:none">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 1</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid7" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/7.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" id="vid8Panel" style="display:none">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 2</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid8" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/8.mp4" type="video/mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="ibox vid9Panel">
+        <div class="ibox-title">
+            <h5>Transfering Your Patient</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-4 vid9Panel" style="display:none">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 1</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid9" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/9.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ibox vid10Panel">
+        <div class="ibox-title">
+            <h5>Body Mechanics</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-4 vid10Panel" style="display:none">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 1</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid10" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/10.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ibox vid11Panel">
+        <div class="ibox-title">
+            <h5>Patient With Decreased Mobility</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-4 vid11Panel" style="display:none">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 1</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid11" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/11.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" id="vid12Panel" style="display:none">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 2</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid12" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/12.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" id="vid13Panel" style="display:none">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 3</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid13" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/13.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" id="vid14Panel" style="display:none">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 4</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid14" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/14.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ibox vid15Panel">
+        <div class="ibox-title">
+            <h5>Mobile App Setup</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-4 vid15Panel" style="display:none">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 1</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid15" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/15.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" id="vid16Panel" style="display:none">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Video 2</h5>
+                        </div>
+
+                        <div class="ibox-content">
+                            <video id="vid16" width="320" height="240" controls controlsList="nodownload">
+                                <source src="~/videos/16.mp4">
+
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h3>Document(s)</h3>
+                </div>
+
+                <div class="ibox-content">
+                    <table class="table table-striped table-bordered table-hover dataTables-example" id="tbl">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Description
+                                </th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Documents)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Description)
+                                    </td>
+                                    <td>
+                                        <a style="margin-left:20px;" target="_blank" href="Download/@item.DocumentId">
+                                            <i class="fa fa-download"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    <environment names="Development,Staging,Production">
+        <link rel="stylesheet" href="~/lib/dataTables/datatables.min.css" />
+        <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />
+    </environment>
+    <style>
+        video::-internal-media-controls-download-button {
+            display: none;
+        }
+
+        video::-webkit-media-controls-enclosure {
+            overflow: hidden;
+        }
+
+        video::-webkit-media-controls-panel {
+            width: calc(100% + 30px); /* Adjust as needed */
+        }
+    </style>
+}
+
+@section Scripts {
+    <environment names="Development,Staging,Production">
+        <script src="~/lib/dataTables/datatables.min.js"></script>
+        <script src="~/lib/dataTables/dataTables.bootstrap4.min.js"></script>
+        <script src="~/lib/sweetalert/dist/sweetalert.min.js"></script>
+    </environment>
+
+    <script type="text/javascript">
+
+         $(document).ready(function () {
+            $('#tbl').DataTable({
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy' },
+                    { extend: 'csv' },
+                    { extend: 'excel', title: 'Questions' },
+                      {
+                        extend: 'pdf', title: 'Questions',
+                        customize: function (doc) {
+                            doc.pageMargins = [10, 10, 10, 10];
+                            doc.defaultStyle.fontSize = 7;
+                            doc.styles.tableHeader.fontSize = 7;
+                            doc.styles.title.fontSize = 9;
+                            // Remove spaces around page title
+                            doc.content[0].text = "Standard Precautions HIPPA \n Emergency Preparedness Home Safety";
+                            doc.content[1].table.widths =
+                                Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                        }
+                    },
+
+                    {
+                        extend: 'print',
+                        customize: function (win) {
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    }
+                ],
+
+            });
+        });
+
+        function updateVideo(vidName,vid) {
+
+             var dataToSend = {
+                vidName: vid,
+                vid : vidName
+            };
+             $.ajax({
+                    url: "/Attendant/UpdateVideos",
+                    type: "POST",
+                    dataType: "json",
+                    data: dataToSend,
+                    success: function (data) {
+
+                    }
+                })
+
+        }
+
+        supposedCurrentTimeVideo1 = @(Model.Videos.Video1??0);
+        supposedCurrentTimeVideo2 = @(Model.Videos.Video2??0);
+        supposedCurrentTimeVideo3 = @(Model.Videos.Video3??0);
+        supposedCurrentTimeVideo4 = @(Model.Videos.Video4??0);
+        supposedCurrentTimeVideo5 = @(Model.Videos.Video5??0);
+        supposedCurrentTimeVideo6 = @(Model.Videos.Video6??0);
+        supposedCurrentTimeVideo7 = @(Model.Videos.Video7??0);
+        supposedCurrentTimeVideo8 = @(Model.Videos.Video8??0);
+        supposedCurrentTimeVideo9 = @(Model.Videos.Video9??0);
+        supposedCurrentTimeVideo10 = @(Model.Videos.Video10??0);
+        supposedCurrentTimeVideo11 = @(Model.Videos.Video11??0);
+        supposedCurrentTimeVideo12 = @(Model.Videos.Video12??0);
+        supposedCurrentTimeVideo13 = @(Model.Videos.Video13??0);
+        supposedCurrentTimeVideo14 = @(Model.Videos.Video14??0);
+        supposedCurrentTimeVideo15 = @(Model.Videos.Video15??0);
+        supposedCurrentTimeVideo16 = @(Model.Videos.Video16??0);
+
+
+        supposedCurrentTimeVideo1Duration = @(Model.Videos.Video1Duration??0);
+        supposedCurrentTimeVideo2Duration = @(Model.Videos.Video2Duration??0);
+        supposedCurrentTimeVideo3Duration = @(Model.Videos.Video3Duration??0);
+        supposedCurrentTimeVideo4Duration = @(Model.Videos.Video4Duration??0);
+        supposedCurrentTimeVideo5Duration = @(Model.Videos.Video5Duration??0);
+        supposedCurrentTimeVideo6Duration = @(Model.Videos.Video6Duration??0);
+        supposedCurrentTimeVideo7Duration = @(Model.Videos.Video7Duration??0);
+        supposedCurrentTimeVideo8Duration = @(Model.Videos.Video8Duration??0);
+        supposedCurrentTimeVideo9Duration = @(Model.Videos.Video9Duration??0);
+        supposedCurrentTimeVideo10Duration = @(Model.Videos.Video10Duration??0);
+        supposedCurrentTimeVideo11Duration = @(Model.Videos.Video11Duration??0);
+        supposedCurrentTimeVideo12Duration = @(Model.Videos.Video12Duration??0);
+        supposedCurrentTimeVideo13Duration = @(Model.Videos.Video13Duration??0);
+        supposedCurrentTimeVideo14Duration = @(Model.Videos.Video14Duration??0);
+        supposedCurrentTimeVideo15Duration = @(Model.Videos.Video15Duration??0);
+        supposedCurrentTimeVideo16Duration = @(Model.Videos.Video16Duration??0);
+
+        supposedCurrentTimeVideo1Duration = getVideoTime(supposedCurrentTimeVideo1Duration);
+        supposedCurrentTimeVideo2Duration = getVideoTime(supposedCurrentTimeVideo2Duration);
+        supposedCurrentTimeVideo3Duration = getVideoTime(supposedCurrentTimeVideo3Duration);
+        supposedCurrentTimeVideo4Duration = getVideoTime(supposedCurrentTimeVideo4Duration);
+        supposedCurrentTimeVideo5Duration = getVideoTime(supposedCurrentTimeVideo5Duration);
+        supposedCurrentTimeVideo6Duration = getVideoTime(supposedCurrentTimeVideo6Duration);
+        supposedCurrentTimeVideo7Duration = getVideoTime(supposedCurrentTimeVideo7Duration);
+        supposedCurrentTimeVideo8Duration = getVideoTime(supposedCurrentTimeVideo8Duration);
+        supposedCurrentTimeVideo9Duration = getVideoTime(supposedCurrentTimeVideo9Duration);
+        supposedCurrentTimeVideo10Duration = getVideoTime(supposedCurrentTimeVideo10Duration);
+        supposedCurrentTimeVideo11Duration = getVideoTime(supposedCurrentTimeVideo11Duration);
+        supposedCurrentTimeVideo12Duration = getVideoTime(supposedCurrentTimeVideo12Duration);
+        supposedCurrentTimeVideo13Duration = getVideoTime(supposedCurrentTimeVideo13Duration);
+        supposedCurrentTimeVideo14Duration = getVideoTime(supposedCurrentTimeVideo14Duration);
+        supposedCurrentTimeVideo15Duration = getVideoTime(supposedCurrentTimeVideo15Duration);
+        supposedCurrentTimeVideo16Duration = getVideoTime(supposedCurrentTimeVideo16Duration);
+
+
+        function getVideoTime(duration) {
+            var durations = duration.toString().split(".");
+            console.log((Number(durations[0]) * 60) + Number(durations[1]));
+            return (Number(durations[0]) * 60) + Number(durations[1]);
+        }
+
+
+
+         document.getElementById('vid1').addEventListener('loadedmetadata', function () {
+            this.currentTime = supposedCurrentTimeVideo1;
+         }, false);
+
+         document.getElementById('vid2').addEventListener('loadedmetadata', function () {
+            this.currentTime = supposedCurrentTimeVideo2;
+         }, false);
+
+         document.getElementById('vid3').addEventListener('loadedmetadata', function () {
+            this.currentTime = supposedCurrentTimeVideo3;
+        }, false);
+
+         document.getElementById('vid4').addEventListener('loadedmetadata', function () {
+            this.currentTime = supposedCurrentTimeVideo4;
+         }, false);
+
+        document.getElementById('vid5').addEventListener('loadedmetadata', function () {
+            this.currentTime = supposedCurrentTimeVideo5;
+        }, false);
+
+        document.getElementById('vid6').addEventListener('loadedmetadata', function () {
+            this.currentTime = supposedCurrentTimeVideo6;
+        }, false);
+
+        document.getElementById('vid7').addEventListener('loadedmetadata', function () {
+            this.currentTime = supposedCurrentTimeVideo7;
+        }, false);
+
+        document.getElementById('vid8').addEventListener('loadedmetadata', function () {
+            this.currentTime = supposedCurrentTimeVideo8;
+        }, false);
+
+        document.getElementById('vid9').addEventListener('loadedmetadata', function () {
+            this.currentTime = supposedCurrentTimeVideo9;
+        }, false);
+
+        document.getElementById('vid10').addEventListener('loadedmetadata', function () {
+            this.currentTime = supposedCurrentTimeVideo10;
+        }, false);
+
+        document.getElementById('vid11').addEventListener('loadedmetadata', function () {
+            this.currentTime = supposedCurrentTimeVideo11;
+        }, false);
+
+        document.getElementById('vid12').addEventListener('loadedmetadata', function () {
+            this.currentTime = supposedCurrentTimeVideo12;
+        }, false);
+
+        document.getElementById('vid13').addEventListener('loadedmetadata', function () {
+            this.currentTime = supposedCurrentTimeVideo13;
+        }, false);
+
+        document.getElementById('vid14').addEventListener('loadedmetadata', function () {
+            this.currentTime = supposedCurrentTimeVideo14;
+        }, false);
+
+        document.getElementById('vid15').addEventListener('loadedmetadata', function () {
+            this.currentTime = supposedCurrentTimeVideo15;
+        }, false);
+
+        document.getElementById('vid16').addEventListener('loadedmetadata', function () {
+            this.currentTime = supposedCurrentTimeVideo16;
+        }, false);
+
+        //var vid = document.getElementById("vid1");
+        //console.log(vid.currentTime);
+
+        var video1 = document.getElementById('vid1');
+        var video2 = document.getElementById('vid2');
+        var video3 = document.getElementById('vid3');
+        var video4 = document.getElementById('vid4');
+        var video5 = document.getElementById('vid5');
+        var video6 = document.getElementById('vid6');
+        var video7 = document.getElementById('vid7');
+        var video8 = document.getElementById('vid8');
+        var video9 = document.getElementById('vid9');
+        var video10 = document.getElementById('vid10');
+        var video11 = document.getElementById('vid11');
+        var video12 = document.getElementById('vid12');
+        var video13 = document.getElementById('vid13');
+        var video14 = document.getElementById('vid14');
+        var video15 = document.getElementById('vid15');
+        var video16 = document.getElementById('vid16');
+
+        video1.addEventListener('timeupdate', function () {
+            if (!video1.seeking) {
+                supposedCurrentTimeVideo1 = video1.currentTime;
+            }
+            updateVideo(video1.currentTime,1);
+        });
+        video1.addEventListener('seeking', function () {
+            // guard agains infinite recursion:
+            // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+            if (video1.currentTime > supposedCurrentTimeVideo1) {
+                console.log("Seeking is disabled");
+                video1.currentTime = supposedCurrentTimeVideo1;
+            }
+            
+
+        });
+        video1.addEventListener('ended', function () {
+            // reset state in order to allow for rewind
+            updateVideo(video1.currentTime,1);
+            supposedCurrentTimeVideo1 = 0;
+             $("#vid2Panel").show();
+        });
+
+        video2.addEventListener('timeupdate', function () {
+            if (!video2.seeking) {
+                supposedCurrentTimeVideo2 = video2.currentTime;
+            }
+             updateVideo(video2.currentTime,2);
+        });
+        video2.addEventListener('seeking', function () {
+            // guard agains infinite recursion:
+            // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+            if (video2.currentTime > supposedCurrentTimeVideo2) {
+                console.log("Seeking is disabled");
+                video2.currentTime = supposedCurrentTimeVideo2;
+            }
+            
+        });
+        video2.addEventListener('ended', function () {
+            // reset state in order to allow for rewind
+            supposedCurrentTimeVideo2 = 0;
+            $(".vid3Panel").show();
+            updateVideo(video2.currentTime,2);
+        });
+
+
+        video3.addEventListener('timeupdate', function () {
+            if (!video3.seeking) {
+                supposedCurrentTimeVideo3 = video3.currentTime;
+            }
+             updateVideo(video3.currentTime,3);
+        });
+        video3.addEventListener('seeking', function () {
+            // guard agains infinite recursion:
+            // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+            if (video3.currentTime > supposedCurrentTimeVideo3) {
+                console.log("Seeking is disabled");
+                video3.currentTime = supposedCurrentTimeVideo3;
+            }
+            
+        });
+        video3.addEventListener('ended', function () {
+            // reset state in order to allow for rewind
+            updateVideo(video3.currentTime,3);
+            supposedCurrentTimeVideo3 = 0;
+             $("#vid4Panel").show();
+        });
+
+        video4.addEventListener('timeupdate', function () {
+            if (!video4.seeking) {
+                supposedCurrentTimeVideo4 = video4.currentTime;
+            }
+              updateVideo(video4.currentTime,4);
+        });
+        video4.addEventListener('seeking', function () {
+            // guard agains infinite recursion:
+            // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+            if (video4.currentTime > supposedCurrentTimeVideo4) {
+                console.log("Seeking is disabled");
+                video4.currentTime = supposedCurrentTimeVideo4;
+            }
+            
+        });
+        video4.addEventListener('ended', function () {
+            // reset state in order to allow for rewind
+            updateVideo(video4.currentTime,4);
+            supposedCurrentTimeVideo4 = 0;
+             $(".vid5Panel").show();
+        });
+
+
+        video5.addEventListener('timeupdate', function () {
+            if (!video5.seeking) {
+                supposedCurrentTimeVideo5 = video5.currentTime;
+            }
+                updateVideo(video5.currentTime,5);
+        });
+        video5.addEventListener('seeking', function () {
+            // guard agains infinite recursion:
+            // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+            if (video5.currentTime > supposedCurrentTimeVideo5) {
+                console.log("Seeking is disabled");
+                video5.currentTime = supposedCurrentTimeVideo5;
+            }
+             
+        });
+        video5.addEventListener('ended', function () {
+            // reset state in order to allow for rewind
+            updateVideo(video5.currentTime,5);
+            supposedCurrentTimeVideo5 = 0;
+             $("#vid6Panel").show();
+        });
+
+
+        video6.addEventListener('timeupdate', function () {
+            if (!video6.seeking) {
+                supposedCurrentTimeVideo6 = video6.currentTime;
+            }
+            updateVideo(video6.currentTime,6);
+        });
+        video6.addEventListener('seeking', function () {
+            // guard agains infinite recursion:
+            // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+            if (video6.currentTime > supposedCurrentTimeVideo6) {
+                console.log("Seeking is disabled");
+                video6.currentTime = supposedCurrentTimeVideo6;
+            }
+             
+        });
+        video6.addEventListener('ended', function () {
+            // reset state in order to allow for rewind
+            updateVideo(video6.currentTime,6);
+            supposedCurrentTimeVideo6 = 0;
+             $(".vid7Panel").show();
+        });
+
+        video7.addEventListener('timeupdate', function () {
+            if (!video7.seeking) {
+                supposedCurrentTimeVideo7 = video7.currentTime;
+            }
+            updateVideo(video7.currentTime,7);
+        });
+        video7.addEventListener('seeking', function () {
+            // guard agains infinite recursion:
+            // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+            if (video7.currentTime > supposedCurrentTimeVideo7) {
+                console.log("Seeking is disabled");
+                video7.currentTime = supposedCurrentTimeVideo7;
+            }
+             
+        });
+        video7.addEventListener('ended', function () {
+            // reset state in order to allow for rewind
+            supposedCurrentTimeVideo7 = 0;
+            updateVideo(video7.currentTime,7);
+             $("#vid8Panel").show();
+        });
+
+
+        video8.addEventListener('timeupdate', function () {
+            if (!video8.seeking) {
+                supposedCurrentTimeVideo8 = video8.currentTime;
+            }
+            updateVideo(video8.currentTime,8);
+        });
+        video8.addEventListener('seeking', function () {
+            // guard agains infinite recursion:
+            // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+            if (video8.currentTime > supposedCurrentTimeVideo8) {
+                console.log("Seeking is disabled");
+                video8.currentTime = supposedCurrentTimeVideo8;
+            }
+             
+        });
+        video8.addEventListener('ended', function () {
+            // reset state in order to allow for rewind
+            supposedCurrentTimeVideo8 = 0;
+            $(".vid9Panel").show();
+            updateVideo(video8.currentTime,8);
+        });
+
+        video9.addEventListener('timeupdate', function () {
+            if (!video9.seeking) {
+                supposedCurrentTimeVideo9 = video9.currentTime;
+            }
+            updateVideo(video9.currentTime,9);
+        });
+        video9.addEventListener('seeking', function () {
+            // guard agains infinite recursion:
+            // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+            if (video9.currentTime > supposedCurrentTimeVideo9) {
+                console.log("Seeking is disabled");
+                video9.currentTime = supposedCurrentTimeVideo9;
+            }
+             
+        });
+        video9.addEventListener('ended', function () {
+            // reset state in order to allow for rewind
+             updateVideo(video9.currentTime,9);
+            supposedCurrentTimeVideo9 = 0;
+             $(".vid10Panel").show();
+        });
+
+
+        video10.addEventListener('timeupdate', function () {
+            if (!video10.seeking) {
+                supposedCurrentTimeVideo10 = video10.currentTime;
+            }
+            updateVideo(video10.currentTime,10);
+        });
+        video10.addEventListener('seeking', function () {
+            // guard agains infinite recursion:
+            // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+            if (video10.currentTime > supposedCurrentTimeVideo10) {
+                console.log("Seeking is disabled");
+                video10.currentTime = supposedCurrentTimeVideo10;
+            }
+             
+        });
+        video10.addEventListener('ended', function () {
+            // reset state in order to allow for rewind
+            updateVideo(video10.currentTime,10);
+            supposedCurrentTimeVideo10 = 0;
+             $(".vid11Panel").show();
+        });
+
+
+
+        video11.addEventListener('timeupdate', function () {
+            if (!video11.seeking) {
+                supposedCurrentTimeVideo11 = video11.currentTime;
+            }
+            updateVideo(video11.currentTime,11);
+        });
+        video11.addEventListener('seeking', function () {
+            // guard agains infinite recursion:
+            // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+            if (video11.currentTime > supposedCurrentTimeVideo11) {
+                console.log("Seeking is disabled");
+                video11.currentTime = supposedCurrentTimeVideo11;
+            }
+             
+        });
+        video11.addEventListener('ended', function () {
+            // reset state in order to allow for rewind
+            updateVideo(video11.currentTime,11);
+            supposedCurrentTimeVideo11 = 0;
+             $("#vid12Panel").show();
+        });
+
+        video12.addEventListener('timeupdate', function () {
+            if (!video12.seeking) {
+                supposedCurrentTimeVideo12 = video12.currentTime;
+            }
+            updateVideo(video12.currentTime,12);
+        });
+        video12.addEventListener('seeking', function () {
+            // guard agains infinite recursion:
+            // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+            if (video12.currentTime > supposedCurrentTimeVideo12) {
+                console.log("Seeking is disabled");
+                video12.currentTime = supposedCurrentTimeVideo12;
+            }
+             
+        });
+        video12.addEventListener('ended', function () {
+            // reset state in order to allow for rewind
+            updateVideo(video12.currentTime,12);
+            supposedCurrentTimeVideo12 = 0;
+             $("#vid13Panel").show();
+        });
+
+
+        video13.addEventListener('timeupdate', function () {
+            if (!video13.seeking) {
+                supposedCurrentTimeVideo13 = video13.currentTime;
+            }
+             updateVideo(video13.currentTime,13);
+        });
+        video13.addEventListener('seeking', function () {
+            // guard agains infinite recursion:
+            // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+            if (video13.currentTime > supposedCurrentTimeVideo13) {
+                console.log("Seeking is disabled");
+                video13.currentTime = supposedCurrentTimeVideo13;
+            }
+             
+        });
+        video13.addEventListener('ended', function () {
+            // reset state in order to allow for rewind
+            updateVideo(video13.currentTime,13);
+            supposedCurrentTimeVideo13 = 0;
+             $("#vid14Panel").show();
+        });
+
+
+        video14.addEventListener('timeupdate', function () {
+            if (!video14.seeking) {
+                supposedCurrentTimeVideo14 = video14.currentTime;
+            }
+            updateVideo(video14.currentTime,14);
+        });
+        video14.addEventListener('seeking', function () {
+            // guard agains infinite recursion:
+            // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+            if (video14.currentTime > supposedCurrentTimeVideo14) {
+                console.log("Seeking is disabled");
+                video14.currentTime = supposedCurrentTimeVideo14;
+            }
+             
+        });
+        video14.addEventListener('ended', function () {
+            // reset state in order to allow for rewind
+            updateVideo(video14.currentTime,14);
+            supposedCurrentTimeVideo14 = 0;
+             $(".vid15Panel").show();
+        });
+
+
+        video15.addEventListener('timeupdate', function () {
+            if (!video15.seeking) {
+                supposedCurrentTimeVideo15 = video15.currentTime;
+            }
+            updateVideo(video15.currentTime,15);
+        });
+        video15.addEventListener('seeking', function () {
+            // guard agains infinite recursion:
+            // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+            if (video15.currentTime > supposedCurrentTimeVideo15) {
+                console.log("Seeking is disabled");
+                video15.currentTime = supposedCurrentTimeVideo15;
+            }
+             
+        });
+        video15.addEventListener('ended', function () {
+            // reset state in order to allow for rewind
+            updateVideo(video15.currentTime,15);
+            supposedCurrentTimeVideo15 = 0;
+             $("#vid16Panel").show();
+        });
+
+
+        video16.addEventListener('timeupdate', function () {
+            if (!video16.seeking) {
+                supposedCurrentTimeVideo16 = video16.currentTime;
+            }
+            updateVideo(video16.currentTime,16);
+        });
+        video16.addEventListener('seeking', function () {
+            // guard agains infinite recursion:
+            // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+            if (video16.currentTime > supposedCurrentTimeVideo16) {
+                console.log("Seeking is disabled");
+                video16.currentTime = supposedCurrentTimeVideo16;
+            }
+             
+        });
+        video16.addEventListener('ended', function () {
+             updateVideo(video16.currentTime,16);
+            // reset state in order to allow for rewind
+            supposedCurrentTimeVideo16 = 0;
+              swal({
+                title: "Ready to take TEST?",
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "No",
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes",
+                closeOnConfirm: false
+            },
+                function (isConfirm) {
+                    if (!isConfirm)
+                        return;
+
+                      $.ajax({
+                    url: "/Test/updateSession",
+                    type: "POST",
+                    dataType: "json",
+                      success: function (data) {
+                        window.location.href = "@Settings.Value.WebBaseURL/Attendent/Exam";
+                    }
+                })
+
+
+                  });
+
+
+
+        });
+
+        setTimeout(function () {
+
+            if (Number(supposedCurrentTimeVideo1Duration.toFixed(1)) > supposedCurrentTimeVideo1) {
+                $("#vid2Panel").hide();
+                $(".vid3Panel").hide();
+                $("#vid4Panel").hide();
+                $(".vid5Panel").hide();
+                $("#vid6Panel").hide();
+                $(".vid7Panel").hide();
+                $("#vid8Panel").hide();
+                $(".vid9Panel").hide();
+                $(".vid10Panel").hide();
+                $(".vid11Panel").hide();
+                $("#vid12Panel").hide();
+                $("#vid13Panel").hide();
+                $("#vid14Panel").hide();
+                $(".vid15Panel").hide();
+                $("#vid16Panel").hide();
+
+            }
+            else {
+                $("#vid2Panel").show();
+
+            }
+
+            if (Number(supposedCurrentTimeVideo2Duration.toFixed(1)) > supposedCurrentTimeVideo2) {
+                $(".vid3Panel").hide();
+                $("#vid4Panel").hide();
+                $(".vid5Panel").hide();
+                $("#vid6Panel").hide();
+                $(".vid7Panel").hide();
+                $("#vid8Panel").hide();
+                $(".vid9Panel").hide();
+                $(".vid10Panel").hide();
+                $(".vid11Panel").hide();
+                $("#vid12Panel").hide();
+                $("#vid13Panel").hide();
+                $("#vid14Panel").hide();
+                $(".vid15Panel").hide();
+                $("#vid16Panel").hide();
+            }
+            else {
+                 $(".vid3Panel").show();
+            }
+
+             if (Number(supposedCurrentTimeVideo3Duration.toFixed(1)) > supposedCurrentTimeVideo3) {
+                $("#vid4Panel").hide();
+                $(".vid5Panel").hide();
+                $("#vid6Panel").hide();
+                $(".vid7Panel").hide();
+                $("#vid8Panel").hide();
+                $(".vid9Panel").hide();
+                $(".vid10Panel").hide();
+                $(".vid11Panel").hide();
+                $("#vid12Panel").hide();
+                $("#vid13Panel").hide();
+                $("#vid14Panel").hide();
+                $(".vid15Panel").hide();
+                $("#vid16Panel").hide();
+            }
+            else {
+                 $("#vid4Panel").show();
+            }
+
+             if (Number(supposedCurrentTimeVideo4Duration.toFixed(1)) > supposedCurrentTimeVideo4) {
+                $(".vid5Panel").hide();
+                $("#vid6Panel").hide();
+                $(".vid7Panel").hide();
+                $("#vid8Panel").hide();
+                $(".vid9Panel").hide();
+                $(".vid10Panel").hide();
+                $(".vid11Panel").hide();
+                $("#vid12Panel").hide();
+                $("#vid13Panel").hide();
+                $("#vid14Panel").hide();
+                $(".vid15Panel").hide();
+                $("#vid16Panel").hide();
+            }
+            else {
+                 $(".vid5Panel").show();
+            }
+
+             if (Number(supposedCurrentTimeVideo5Duration.toFixed(1)) > supposedCurrentTimeVideo5) {
+                $("#vid6Panel").hide();
+                $(".vid7Panel").hide();
+                $("#vid8Panel").hide();
+                $(".vid9Panel").hide();
+                $(".vid10Panel").hide();
+                $(".vid11Panel").hide();
+                $("#vid12Panel").hide();
+                $("#vid13Panel").hide();
+                $("#vid14Panel").hide();
+                $(".vid15Panel").hide();
+                $("#vid16Panel").hide();
+            }
+            else {
+                 $("#vid6Panel").show();
+            }
+
+             if (Number(supposedCurrentTimeVideo6Duration.toFixed(1)) > supposedCurrentTimeVideo6) {
+                $(".vid7Panel").hide();
+                $("#vid8Panel").hide();
+                $(".vid9Panel").hide();
+                $(".vid10Panel").hide();
+                $(".vid11Panel").hide();
+                $("#vid12Panel").hide();
+                $("#vid13Panel").hide();
+                $("#vid14Panel").hide();
+                $(".vid15Panel").hide();
+                $("#vid16Panel").hide();
+            }
+            else {
+                 $(".vid7Panel").show();
+            }
+
+             if (Number(supposedCurrentTimeVideo7Duration.toFixed(1)) > supposedCurrentTimeVideo7) {
+                $("#vid8Panel").hide();
+                $(".vid9Panel").hide();
+                $(".vid10Panel").hide();
+                $(".vid11Panel").hide();
+                $("#vid12Panel").hide();
+                $("#vid13Panel").hide();
+                $("#vid14Panel").hide();
+                $(".vid15Panel").hide();
+                $("#vid16Panel").hide();
+            }
+            else {
+                 $("#vid8Panel").show();
+            }
+
+             if (Number(supposedCurrentTimeVideo8Duration.toFixed(1)) > supposedCurrentTimeVideo8) {
+                $(".vid9Panel").hide();
+                $(".vid10Panel").hide();
+                $(".vid11Panel").hide();
+                $("#vid12Panel").hide();
+                $("#vid13Panel").hide();
+                $("#vid14Panel").hide();
+                $(".vid15Panel").hide();
+                $("#vid16Panel").hide();
+            }
+            else {
+                 $(".vid9Panel").show();
+            }
+
+             if (Number(supposedCurrentTimeVideo9Duration.toFixed(1)) > supposedCurrentTimeVideo9) {
+                $(".vid10Panel").hide();
+                $(".vid11Panel").hide();
+                $("#vid12Panel").hide();
+                $("#vid13Panel").hide();
+                $("#vid14Panel").hide();
+                $(".vid15Panel").hide();
+                $("#vid16Panel").hide();
+            }
+            else {
+                 $(".vid10Panel").show();
+            }
+
+             if (Number(supposedCurrentTimeVideo10Duration.toFixed(1)) > supposedCurrentTimeVideo10) {
+                $(".vid11Panel").hide();
+                $("#vid12Panel").hide();
+                $("#vid13Panel").hide();
+                $("#vid14Panel").hide();
+                $(".vid15Panel").hide();
+                $("#vid16Panel").hide();
+            }
+            else {
+                 $(".vid11Panel").show();
+            }
+
+             if (Number(supposedCurrentTimeVideo11Duration.toFixed(1)) > supposedCurrentTimeVideo11) {
+                $("#vid12Panel").hide();
+                $("#vid13Panel").hide();
+                $("#vid14Panel").hide();
+                $(".vid15Panel").hide();
+                $("#vid16Panel").hide();
+            }
+            else {
+                 $("#vid12Panel").show();
+            }
+
+             if (Number(supposedCurrentTimeVideo12Duration.toFixed(1)) > supposedCurrentTimeVideo12) {
+                $("#vid13Panel").hide();
+                $("#vid14Panel").hide();
+                $(".vid15Panel").hide();
+                $("#vid16Panel").hide();
+            }
+            else {
+                 $("#vid13Panel").show();
+            }
+
+             if (Number(supposedCurrentTimeVideo13Duration.toFixed(1)) > supposedCurrentTimeVideo13) {
+                 $("#vid14Panel").hide();
+                 $(".vid15Panel").hide();
+                $("#vid16Panel").hide();
+            }
+            else {
+                 $("#vid14Panel").show();
+            }
+
+             if (Number(supposedCurrentTimeVideo14Duration.toFixed(1)) > supposedCurrentTimeVideo14) {
+                $(".vid15Panel").hide();
+                $("#vid16Panel").hide();
+            }
+            else {
+                 $(".vid15Panel").show();
+            }
+
+             if (Number(supposedCurrentTimeVideo15Duration.toFixed(1)) > supposedCurrentTimeVideo15) {
+                $("#vid16Panel").hide();
+            }
+            else {
+                 $("#vid16Panel").show();
+            }
+
+        }, 1000);
+
+    </script>
+
+
+}
+
+
+
+
+

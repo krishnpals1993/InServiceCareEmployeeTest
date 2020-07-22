@@ -1,0 +1,228 @@
+﻿@model EmployeeTest.Models.QuestionViewModel
+
+@{
+    ViewData["Title"] = "Add Question";
+}
+@using Microsoft.Extensions.Options;
+
+@inject IOptions<Appsettings> Settings
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h3>@ViewData["Title"]</h3>
+                </div>
+                <div class="ibox-content">
+                    <form method="post" asp-action="Edit">
+
+                        @Html.HiddenFor(h => h.QuestionId)
+
+                        <div class="row form-group">
+                            <div class="col-md-1">
+                                <label class="col-form-label">Test</label>
+                            </div>
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.TestId, new SelectList(Model.TestList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"), "Select Test", new { @class = "form-control", @placeholder = "Select Test" })
+                                <span asp-validation-for="TestId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-lg-1">
+                                <label asp-for="Question" class="col-form-label"></label>
+                            </div>
+                            <div class="col-md-11">
+                                <textarea asp-for="Question" class="form-control" placeholder="Question" maxlength="150">
+                                </textarea>
+                                <span asp-validation-for="Question" class="text-danger"></span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group row">
+                            <div class="col-lg-1">
+                                <label asp-for="Choice1" class="col-form-label"></label>
+                            </div>
+                            <div class="col-md-5">
+                                <input asp-for="Choice1" class="form-control choice" placeholder="Choice 1" maxlength="150" />
+                                <span asp-validation-for="Choice1" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-1">
+                                <label asp-for="Choice2" class="col-form-label"></label>
+                            </div>
+                            <div class="col-md-5">
+                                <input asp-for="Choice2" class="form-control choice" placeholder="Choice 2" maxlength="150" />
+                                <span asp-validation-for="Choice2" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-lg-1">
+                                <label asp-for="Choice3" class="col-form-label"></label>
+                            </div>
+                            <div class="col-md-5">
+                                <input asp-for="Choice3" class="form-control choice" placeholder="Choice 3" maxlength="150" />
+                                <span asp-validation-for="Choice3" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-1">
+                                <label asp-for="Choice4" class="col-form-label"></label>
+                            </div>
+                            <div class="col-md-5">
+                                <input asp-for="Choice4" class="form-control choice" placeholder="Choice 4" maxlength="150" />
+                                <span asp-validation-for="Choice4" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-1">
+                                <label asp-for="Choice5" class="col-form-label"></label>
+                            </div>
+                            <div class="col-md-5">
+                                <input asp-for="Choice5" class="form-control choice" placeholder="Choice 5" maxlength="150" />
+                                <span asp-validation-for="Choice5" class="text-danger"></span>
+                            </div>
+
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-1">
+                                <label asp-for="Answer" class="col-form-label"></label>
+                            </div>
+                            <div class="col-md-5">
+                                <select asp-for="Answer" class="form-control">
+                                    <option value="">--select--</option>
+                                    <option class="opt" id="opt1" value="1">Choice 1</option>
+                                    <option class="opt" id="opt2" value="2">Choice 2</option>
+                                    <option class="opt" id="opt3" value="3">Choice 3</option>
+                                    <option class="opt" id="opt4" value="4">Choice 4</option>
+                                    <option class="opt" id="opt5" value="5">Choice 5</option>
+                                </select>
+                                <span asp-validation-for="Answer" class="text-danger"></span>
+                            </div>
+                        </div>
+
+
+                        @if (ViewBag.SuccessMessage != null)
+                        {
+                            <p class="text-primary">@ViewBag.SuccessMessage</p>
+                        }
+                        @if (ViewBag.ErrorMessage != null)
+                        {
+                            <p class="text-error">@ViewBag.ErrorMessage</p>
+                        }
+
+
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group row">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <a class="btn btn-white btn-sm" asp-action="List">Cancel</a>
+                                <button class="btn btn-primary btn-sm" type="submit">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section styles
+{
+    <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />
+}
+@section Scripts {
+    <script src="~/lib/sweetalert/dist/sweetalert.min.js"></script>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+          $(".opt").hide();
+            if ($("#Choice1").val()) {
+                $("#opt1").show();
+            }
+            else {
+                $("#opt1").hide();
+            }
+
+            if ($("#Choice2").val()) {
+                $("#opt2").show();
+            }
+            else {
+                $("#opt2").hide();
+            }
+
+            if ($("#Choice3").val()) {
+                $("#opt3").show();
+            }
+            else {
+                $("#opt3").hide();
+            }
+
+            if ($("#Choice4").val()) {
+                $("#opt4").show();
+            }
+            else {
+                $("#opt4").hide();
+            }
+
+            if ($("#Choice5").val()) {
+                $("#opt5").show();
+            }
+            else {
+                $("#opt5").hide();
+            }
+
+            var SuccessMessage = '@ViewBag.SuccessMessage';
+        var ErrorMessage = '@ViewBag.ErrorMessage';
+        if (SuccessMessage) {
+            swal(SuccessMessage, "", "success");
+           setTimeout(function () { window.location.href = "@Settings.Value.WebBaseURL/TestSetup/List"; }, 1000);
+
+        }
+          if (ErrorMessage) {
+            swal(ErrorMessage, "", "error");
+        }
+        });
+
+         $(".choice").on("change", function () {
+
+            if ($("#Choice1").val()) {
+                $("#opt1").show();
+            }
+            else {
+                $("#opt1").hide();
+            }
+
+            if ($("#Choice2").val()) {
+                $("#opt2").show();
+            }
+            else {
+                $("#opt2").hide();
+            }
+
+            if ($("#Choice3").val()) {
+                $("#opt3").show();
+            }
+            else {
+                $("#opt3").hide();
+            }
+
+            if ($("#Choice4").val()) {
+                $("#opt4").show();
+            }
+            else {
+                $("#opt4").hide();
+            }
+
+            if ($("#Choice5").val()) {
+                $("#opt5").show();
+            }
+            else {
+                $("#opt5").hide();
+            }
+
+        });
+    </script>
+}
