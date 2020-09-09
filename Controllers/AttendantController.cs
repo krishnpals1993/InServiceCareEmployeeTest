@@ -31,7 +31,7 @@ namespace EmployeeTest.Controllers
         public IActionResult Exam()
         {
             DbfunctionUtility dbfunction = new DbfunctionUtility(_appSettings);
-            List<TestViewModel> TestList = _dbContext.tbl_Tests.Where(w => w.SeasonId == 1)
+            List<TestViewModel> TestList = _dbContext.tbl_Tests.Where(w=>w.IsActive??true).Where(w => w.SeasonId == 1)
                                         .Select(s => new TestViewModel
                                         {
                                             Id = s.Id,
@@ -87,7 +87,7 @@ namespace EmployeeTest.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateVideos(string vidName, string vid, bool isCompleted)
+        public JsonResult UpdateVideos(string vidName, string vid, bool isCompleted, int userId)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -100,7 +100,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 1, UserId, isCompleted);
+                        _videoUtility.UpdateVideo(vid, 1, userId, isCompleted);
                     }
                 }
 
@@ -108,7 +108,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 2, UserId, isCompleted);
+                        _videoUtility.UpdateVideo(vid, 2, userId, isCompleted);
                     }
                 }
 
@@ -116,7 +116,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 3, UserId, isCompleted);
+                        _videoUtility.UpdateVideo(vid, 3, userId, isCompleted);
                     }
                 }
 
@@ -124,7 +124,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 4, UserId, isCompleted);
+                        _videoUtility.UpdateVideo(vid, 4, userId, isCompleted);
                     }
                 }
 
@@ -132,7 +132,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 5, UserId, isCompleted);
+                        _videoUtility.UpdateVideo(vid, 5, userId, isCompleted);
                     }
                 }
 
@@ -140,7 +140,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 6, UserId, isCompleted);
+                        _videoUtility.UpdateVideo(vid, 6, userId, isCompleted);
                     }
                 }
 
@@ -148,7 +148,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 7, UserId, isCompleted);
+                        _videoUtility.UpdateVideo(vid, 7, userId, isCompleted);
                     }
                 }
 
@@ -156,7 +156,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 8, UserId, isCompleted);
+                        _videoUtility.UpdateVideo(vid, 8, userId, isCompleted);
                     }
                 }
 
@@ -164,7 +164,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 9, UserId, isCompleted);
+                        _videoUtility.UpdateVideo(vid, 9, userId, isCompleted);
                     }
                 }
 
@@ -172,7 +172,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 10, UserId, isCompleted);
+                        _videoUtility.UpdateVideo(vid, 10, userId, isCompleted);
                     }
                 }
 
@@ -180,7 +180,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 11, UserId, isCompleted);
+                        _videoUtility.UpdateVideo(vid, 11, userId, isCompleted);
                     }
                 }
 
@@ -188,7 +188,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 12, UserId, isCompleted);
+                        _videoUtility.UpdateVideo(vid, 12, userId, isCompleted);
                     }
                 }
 
@@ -196,7 +196,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 13, UserId, isCompleted);
+                        _videoUtility.UpdateVideo(vid, 13, userId, isCompleted);
                     }
                 }
 
@@ -204,7 +204,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 14, UserId, isCompleted);
+                        _videoUtility.UpdateVideo(vid, 14, userId, isCompleted);
                     }
                 }
 
@@ -212,7 +212,7 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 15, UserId, isCompleted);
+                        _videoUtility.UpdateVideo(vid, 15, userId, isCompleted);
                     }
                 }
 
@@ -220,11 +220,27 @@ namespace EmployeeTest.Controllers
                 {
                     if (Convert.ToString(vid) != "0")
                     {
-                        _videoUtility.UpdateVideo(vid, 16, UserId, isCompleted);
+                        _videoUtility.UpdateVideo(vid, 16, userId, isCompleted);
                     }
                 }
 
+                if (isCompleted)
+                {
+                    var videoId = Convert.ToInt32(vidName);
+                    var testId = _dbContext.tbl_Testvideos.Where(w => w.Id == videoId).Select(s => s.TestId).FirstOrDefault();
+                    var testVideoList = _dbContext.tbl_Testvideos.Where(w => w.TestId == testId).Select(s => s.Id).ToList();
+                    var checkUserTestVideos = _dbContext.tbl_AttendentTestVideos.Where(w => w.UserId == userId && testVideoList.Contains(w.VideoId)).Select(s => s.IsCompleted ?? false).ToList();
+                    if (checkUserTestVideos.Where(w => w == false).Count() == 0 && checkUserTestVideos.Count()==testVideoList.Count())
+                    {
+                        response.Message = "C";
+                        HttpContext.Session.SetString("ShowTest", "True");
 
+                    }
+                    else
+                    {
+                        response.Message = "I";
+                    }
+                }
             }
             catch (Exception ex)
             {

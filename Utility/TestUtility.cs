@@ -21,7 +21,7 @@ namespace EmployeeTest.Utility
             _dbContext = dbContext;
         }
 
-        public List<TestQuestionViewModel> GetUserQuestions(int userId,int TestId)
+        public List<TestQuestionViewModel> GetUserQuestions(int userId, int TestId)
         {
             List<TestQuestionViewModel> questionList = new List<TestQuestionViewModel>();
             var sNo = 0;
@@ -77,11 +77,11 @@ namespace EmployeeTest.Utility
                               where user_test.Id == userTestId
                               select new TestQuestionViewModel
                               {
-                                  CareGiverName = careGiver.FirstName + " " + (Convert.ToString(careGiver.MiddleName) == "" ? "" : Convert.ToString(careGiver.MiddleName) + " ") + careGiver.LastName,
+                                  CareGiverName = careGiver.FirstName + " " + (careGiver.MiddleName + " ") ?? "" + careGiver.LastName,
                                   CareGiverEmail = careGiver.Email,
                                   CorrectCount = user_test.QuestionsRight ?? 0,
-                                  TestId = user_test.TestId
-
+                                  TestId = user_test.TestId,
+                                  ExamDate = user_test.EndDate
 
                               }).FirstOrDefault();
 
@@ -101,7 +101,8 @@ namespace EmployeeTest.Utility
                                 CareGiverName = userDetail.CareGiverName,
                                 CareGiverEmail = userDetail.CareGiverEmail,
                                 QuestionCount = userDetail.QuestionCount,
-                                CorrectCount = userDetail.CorrectCount
+                                CorrectCount = userDetail.CorrectCount,
+                                ExamDate = userDetail.ExamDate
 
                             }).ToList();
 
@@ -132,6 +133,39 @@ namespace EmployeeTest.Utility
 
             return questionList;
         }
+
+        public EmployeeViewModel GetEmployeeTests(int id)
+        {
+            var employee = (from emp in _dbContext.tbl_Attendants
+                            where emp.UserId == id
+                            select new EmployeeViewModel
+                            {
+                                EmployeeId = emp.Id,
+                                FirstName = emp.FirstName,
+                                MiddleName = emp.MiddleName,
+                                LastName = emp.LastName,
+                                Email = emp.Email,
+                                EmployeeNo = emp.EmployeeNo,
+                                UserId = emp.UserId ?? 0,
+
+                            }).FirstOrDefault();
+
+            employee.TestList = (from usertest in _dbContext.tbl_UserTests
+                                 join test in _dbContext.tbl_Tests
+                                 on usertest.TestId equals test.Id
+                                 where usertest.UserId == id && usertest.IsReset == false && usertest.IsLocked == true
+                                 select new CareGiverTestViewModel
+                                 {
+                                     TestId = usertest.Id,
+                                     UserTestId = usertest.Id,
+                                     Name = test.Name
+                                 }).ToList();
+
+
+            return employee;
+
+        }
+
 
     }
 }

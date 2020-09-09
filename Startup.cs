@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Http;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using DinkToPdf.Contracts;
+using DinkToPdf;
+using EmployeeTest.Utility;
 
 namespace EmployeeTest
 {
@@ -41,15 +44,21 @@ namespace EmployeeTest
             });
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(180);//You can set Time   
+                options.IdleTimeout = TimeSpan.FromMinutes(240);//You can set Time   
             });
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddControllersWithViews();
             services.AddDbContext<DBContext>(options =>
               options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(typeof(Startup));    
             services.Configure<Appsettings>(Configuration.GetSection("AppSettings"));
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+
+            var context = new CustomAssemblyLoadContext();
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll");
+            context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

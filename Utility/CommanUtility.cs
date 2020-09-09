@@ -69,6 +69,47 @@ namespace EmployeeTest.Utility
             return cipherText;
         }
 
+        public List<MenuViewModel> GetUserMenus(string roleId)
+        {
+            List<MenuViewModel> UserMenus = new List<MenuViewModel>();
+            try
+            {
+                DataSet ds;
+                DbfunctionUtility dbfunction = new DbfunctionUtility(_appSettings);
+
+                string query = "select menus.* from userclaims join menus on userclaims.MenuId =  menus.MenuId  where RoleId =" + roleId + "";
+                ds = dbfunction.GetDataset(query);
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    UserMenus = (from row in ds.Tables[0].AsEnumerable()
+                                 select new MenuViewModel
+                                 {
+                                     Name = Convert.ToString(row["Name"]),
+                                     Action = Convert.ToString(row["Action"]),
+                                     Controller = Convert.ToString(row["Controller"]),
+                                     Parent = Convert.ToString(row["Parent"]),
+                                 }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return UserMenus;
+
+
+        }
+
+        public bool CheckValidEmail(string email)
+        {
+
+            return Regex.IsMatch(email,
+                @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
+                @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-0-9a-z]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
+                RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+
+        }
+
     }
 }
 

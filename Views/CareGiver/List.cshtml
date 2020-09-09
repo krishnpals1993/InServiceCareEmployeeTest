@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EmployeeTest.Models.EmployeeViewModel>
+﻿@model EmployeeViewModel_datatable
 
 @{
     ViewData["Title"] = "CareGiver List";
@@ -13,10 +13,9 @@
                 <div class="ibox-title">
                     <h3>CareGiver List</h3>
                     <div class="ibox-tools ibox-toolsCareGiver">
-                        @if (Model.Count() > 0)
-                        {
-                            <button class="btn btn-primary btn-sm ibox-toolsCareGiverBtn" onclick="sendEmails()">Send Registration Link To New CareGivers</button>
-                        }
+                        <button class="btn btn-primary btn-sm ibox-toolsCareGiverBtn" id="sendAllLink"  onclick="sendEmails()">Send Registration Link To New CareGivers</button>
+                        <a class="btn btn-primary btn-sm" href="@Url.Action("Import", "CareGiver")">Import</a>
+                        <a class="btn btn-primary btn-sm" href="@Url.Action("Add", "CareGiver")">Add</a>
 
                     </div>
                 </div>
@@ -67,7 +66,11 @@
                             <div class="col-lg-2">
                                 <div class="input-group">
                                     <span class="input-group-append">
-                                        <button onclick="search()" type="button" class="btn btn btn-primary"> <i class="fa fa-search"></i> Search</button>
+                                        <button  type="button" class="btn btn btn-primary search"> <i class="fa fa-search"></i> Search</button>
+                                        <button onclick="print()" id="btnPrint" type="button"
+                                                class="btn btn-primary" style="margin-left:10px;display:none">
+                                            Print Test
+                                        </button>
                                     </span>
                                 </div>
                             </div>
@@ -75,9 +78,20 @@
                     </form>
                     <hr />
 
-                    <div id="ptView">
-                        @Html.Partial("_Table", Model)
-                    </div>
+                    @*<div id="ptView">
+            @Html.Partial("_Table", Model)
+        </div>*@
+
+                    <jquery-datatables id="fingers10"
+                                       class="table table-sm table-striped table-bordered table-hover"
+                                       model="@Model"
+                                       
+                                       search-row-th-class="p-0"
+                                       search-input-class="form-control form-control-sm"
+                                       search-input-style="width:100%"
+                                       thead-class="text-center">
+                    </jquery-datatables>
+
 
                 </div>
             </div>
@@ -96,10 +110,13 @@
 
 @section Scripts {
     <environment names="Development,Staging,Production">
+        <script src="~/lib/momentjs/moment.min.js" asp-append-version="true"></script>
         <script src="~/lib/dataTables/datatables.min.js"></script>
         <script src="~/lib/dataTables/dataTables.bootstrap4.min.js"></script>
         <script src="~/lib/sweetalert/dist/sweetalert.min.js"></script>
         <script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+        <script src="~/js/order.js" asp-append-version="true"></script>
+
     </environment>
 
     <script type="text/javascript">
@@ -145,7 +162,6 @@
                 }
 
             })
-
         }
         function sendEmailLogin(email) {
             $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
@@ -182,39 +198,8 @@
 
         function search() {
 
-            var startDate = $("#startDate").val();
-            var endDate = $("#endDate").val();
-            if ((!startDate) || (!endDate)) {
-                swal("Please select both dates", "", "error");
-                return;
-            }
-            console.log(startDate);
-            console.log(endDate);
-            if (startDate > endDate) {
-                swal("From date should be greater or equal to current date", "", "error");
-                return;
-            }
-
-
-            $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
-            $.ajax({
-                url: "/CareGiver/GetCareGiverListByDate",
-                type: "POST",
-                dataType: "json",
-                data: { startDate: startDate, endDate: endDate },
-                success: function (data) {
-                    $("#ptView").html('').html(data.responseText);
-                    $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
-                    bindDatatable();
-                },
-                error: function (data) {
-                    $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
-                    $("#ptView").html('').html(data.responseText);
-                    bindDatatable();
-                }
-
-            })
-
+           
+            $("#btnPrint").show();
         }
 
         function bindDatatable() {
@@ -225,7 +210,7 @@
                     { extend: 'copy' },
                     {
                         extend: 'csv', exportOptions: {
-                            columns: [0, 1, 2, 3, 4]
+                            columns: [0, 1, 2, 3, 4, 5]
                         }
                     },
                     {
@@ -277,6 +262,21 @@
             return hDisplay + mDisplay + sDisplay;
         }
 
+        function print() {
+            var csUserId = "";
+            $(".cUserId").each(function (index, element) {
+                if (csUserId == "") {
+                    csUserId =   $(element).html().toString().trim();
+                }
+                else {
+                    csUserId = csUserId + "," + $(element).html().toString().trim();
+                }
+
+            });
+            window.open("/PdfGenerator/CareGiversTest/"+csUserId);
+        }
+
 
     </script>
 }
+

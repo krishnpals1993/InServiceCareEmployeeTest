@@ -66,7 +66,7 @@ namespace EmployeeTest.Models
         {
             TestList = new List<CareGiverTestViewModel>();
         }
-        public List<CareGiverTestViewModel> TestList { get; set; } 
+        public List<CareGiverTestViewModel> TestList { get; set; }
         public int EmployeeId { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
@@ -88,15 +88,70 @@ namespace EmployeeTest.Models
         public decimal? VideoDuration { get; set; }
         public int PassingPercentage { get; set; }
         public DateTime? StartDate { get; set; }
+        public DateTime? ExamDate { get; set; }
         public int Totaltest { get; set; }
         public int PassedTest { get; set; }
+
+        public int HrGroupId { get; set; }
+
+        public string HrGroupName { get; set; }
+        public bool ValidEmail { get; set; }
 
 
 
     }
 
-    public class CareGiverTestViewModel {
-        
+    public class EmployeeViewModel_datatable
+    {
+        public int EmployeeId { get; set; }
+        [Sortable]
+        [SearchableString]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+        [Sortable]
+        [SearchableString]
+        [Display(Name = "Middle Name")]
+        public string MiddleName { get; set; }
+        [Sortable]
+        [SearchableString]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+        [Sortable]
+        [SearchableString]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+        [Sortable]
+        [SearchableString]
+        [Display(Name = "Employee No")]
+        public string EmployeeNo { get; set; }
+        [Display(Name = "Hr Group")]
+        [Sortable]
+        [SearchableString]
+        public string HrGroupName { get; set; }
+        public int UserId { get; set; }
+        public bool sendEmail { get; set; }
+        [Sortable]
+        [Display(Name = "Video (Time)")]
+        [SearchableString]
+        public decimal? VideoDuration { get; set; }
+        [Sortable]
+        [Display(Name = "Exam Date")]
+        [Searchable]
+        public DateTime? ExamDate { get; set; }
+        public int Totaltest { get; set; }
+        public int PassedTest { get; set; }
+        public bool ValidEmail { get; set; }
+        public int HrGroupId { get; set; }
+        public string Action { get; set; }
+        public string TestStatus { get; set; }
+
+
+
+    }
+
+    public class CareGiverTestViewModel
+    {
+
         public int TestId { get; set; }
         public string Name { get; set; }
         public int TotalQuestion { get; set; }
@@ -210,6 +265,7 @@ namespace EmployeeTest.Models
         public string CareGiverEmail { get; set; }
         public int TestId { get; set; }
         public string TestName { get; set; }
+        public DateTime? ExamDate { get; set; }
     }
 
     public class CareGiverVideoViewModel
@@ -275,7 +331,7 @@ namespace EmployeeTest.Models
         public bool Video14Completed { get; set; }
         public bool Video15Completed { get; set; }
         public bool Video16Completed { get; set; }
-        
+
     }
 
     public class VideoTimeDuration
@@ -299,23 +355,27 @@ namespace EmployeeTest.Models
         public decimal? Video1 { get; set; }
         public decimal? Video2 { get; set; }
         public decimal? Video3 { get; set; }
+        public int? HrGroupId { get; set; }
 
     }
 
-    public class UserViewModel 
+    public class UserViewModel
     {
 
         public UserViewModel()
         {
             RoleList = new List<RoleViewModel>();
+            HrGroupList = new List<HrGroupViewModel>();
         }
 
         public List<RoleViewModel> RoleList { get; set; }
+
+        public List<HrGroupViewModel> HrGroupList { get; set; }
         public int UserId { get; set; }
 
         [Required(ErrorMessage = "Please enter an email")]
         [Display(Name = "Email")]
-        [DataType(DataType.EmailAddress,ErrorMessage ="Please enter valid email")]
+        [DataType(DataType.EmailAddress, ErrorMessage = "Please enter valid email")]
         [StringLength(50)]
         public string Email { get; set; }
         public string Username { get; set; }
@@ -341,11 +401,11 @@ namespace EmployeeTest.Models
         public int? ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public string RoleName { get; set; }
-        
-        [Display(Name ="First Name")]
+
+        [Display(Name = "First Name")]
         [Required(ErrorMessage = "Please enter first name")]
         public string FirstName { get; set; }
-        
+
         public string MiddleName { get; set; }
 
         [Display(Name = "Last Name")]
@@ -355,6 +415,67 @@ namespace EmployeeTest.Models
         [Display(Name = "Employee No")]
         [Required(ErrorMessage = "Please enter employee no")]
         public string EmployeeNo { get; set; }
+
+        [Display(Name = "Hr Group")]
+        [Required(ErrorMessage = "Please select hr group")]
+        public int HrGroupId { get; set; }
+        public string HrGroupName { get; set; }
+
+    }
+
+    public class CareGiverViewModel
+    {
+
+        public List<HrGroupViewModel> HrGroupList { get; set; }
+        public int UserId { get; set; }
+
+        [Required(ErrorMessage = "Please enter an email")]
+        [Display(Name = "Email")]
+        [DataType(DataType.EmailAddress, ErrorMessage = "Please enter valid email")]
+        [StringLength(50)]
+        public string Email { get; set; }
+        public bool? IsActive { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public int? ModifiedBy { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+        public string RoleName { get; set; }
+
+        [Display(Name = "First Name")]
+        [Required(ErrorMessage = "Please enter first name")]
+        public string FirstName { get; set; }
+
+        public string MiddleName { get; set; }
+
+        [Display(Name = "Last Name")]
+        [Required(ErrorMessage = "Please enter last name")]
+        public string LastName { get; set; }
+
+        [Display(Name = "Employee No")]
+        [Required(ErrorMessage = "Please enter employee no")]
+        public string EmployeeNo { get; set; }
+
+        [Display(Name = "Hr Group")]
+        [Required(ErrorMessage = "Please select hr group")]
+        public int HrGroupId { get; set; }
+        public string HrGroupName { get; set; }
+
+    }
+
+    public class HrGroupUserMappingViewModel
+    {
+
+        public HrGroupUserMappingViewModel()
+        {
+            HrGroupList = new List<HrGroupViewModel>();
+        }
+
+        public List<HrGroupViewModel> HrGroupList { get; set; }
+        public int UserId { get; set; }
+        public string Username { get; set; }
+        [Required(ErrorMessage = "Please select hr group name")]
+        public int HrGroupId { get; set; }
+        public string HrGroupName { get; set; }
 
     }
 
@@ -445,7 +566,8 @@ namespace EmployeeTest.Models
         public int? ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public List<SeasonViewModel> SeasonList { get; set; }
-        public string Status { get;  set; }
+        public string Status { get; set; }
+        public int VideoId { get; set; }
     }
 
     public class AttendentTestVideoViewModel
@@ -456,5 +578,115 @@ namespace EmployeeTest.Models
         public int UserId { get; set; }
         public bool IsCompleted { get; set; }
     }
-  
+
+    public class MenuViewModel
+    {
+        public int MenuId { get; set; }
+        public string Name { get; set; }
+        public string Parent { get; set; }
+        public string Action { get; set; }
+        public string Controller { get; set; }
+        public string Childmenus { get; set; }
+        public string Icon { get; set; }
+        public string Parenticon { get; set; }
+        public bool Ischecked { get; set; }
+
+    }
+
+    public class UserclaimViewModel
+    {
+
+        public int ClaimId { get; set; }
+        [Display(Name = "Role")]
+        public string RoleName { get; set; }
+        public int RoleId { get; set; }
+        public int MenuId { get; set; }
+        public string Columns { get; set; }
+        public bool? IsActive { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public int? ModifiedBy { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+        public List<MenuViewModel> Menus { get; set; }
+        public UserclaimViewModel()
+        {
+            Menus = new List<MenuViewModel>();
+        }
+
+    }
+
+    public class HrGroupViewModel
+    {
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "Please enter name")]
+        public string Name { get; set; }
+        public bool? IsActive { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public int? ModifiedBy { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+
+    }
+
+    public class AdminVideoViewModel
+    {
+        public AdminVideoViewModel()
+        {
+            TestList = new List<TestViewModel>();
+        }
+
+        public List<TestViewModel> TestList { get; set; }
+        public int Video1 { get; set; }
+        public int Video2 { get; set; }
+        public int Video3 { get; set; }
+        public int Video4 { get; set; }
+        public int Video5 { get; set; }
+        public int Video6 { get; set; }
+        public int Video7 { get; set; }
+        public int Video8 { get; set; }
+        public int Video9 { get; set; }
+        public int Video10 { get; set; }
+        public int Video11 { get; set; }
+        public int Video12 { get; set; }
+        public int Video13 { get; set; }
+        public int Video14 { get; set; }
+        public int Video15 { get; set; }
+        public int Video16 { get; set; }
+
+
+    }
+
+    public class UserPermissionViewModel : RoleViewModel
+    {
+        public UserPermissionViewModel()
+        {
+            Menus = new List<MenuViewModel>();
+        }
+
+        public List<MenuViewModel> Menus { get; set; }
+    }
+
+    public class PrintPDFViewModel
+    {
+        public string Question { get; set; }
+        public string Choice1 { get; set; }
+        public string Choice2 { get; set; }
+        public string Choice3 { get; set; }
+        public string Choice4 { get; set; }
+        public string Choice5 { get; set; }
+        public int Answer { get; set; }
+        public int UserAnswer { get; set; }
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
+        public string LastName { get; set; }
+        public string Name { get; set; }
+        public int UserId { get; set; }
+        public int TestId { get; set; }
+        public string TestName { get; set; }
+        public DateTime EndDate { get; set; }
+        public int Pass { get; set; }
+
+    }
+
 }

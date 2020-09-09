@@ -221,22 +221,22 @@ namespace EmployeeTest.Controllers
             VideoTimeDuration VideoDetail15 = _videoUtility.GetVideo(attendantVideoList, 15, UserId);
             VideoTimeDuration VideoDetail16 = _videoUtility.GetVideo(attendantVideoList, 16, UserId);
 
-            videoViewModel.Video1 = VideoDetail1.Duration; 
-            videoViewModel.Video2 = VideoDetail2.Duration; 
-            videoViewModel.Video3 = VideoDetail3.Duration; 
-            videoViewModel.Video4 = VideoDetail4.Duration; 
-            videoViewModel.Video5 = VideoDetail5.Duration; 
-            videoViewModel.Video6 = VideoDetail6.Duration; 
-            videoViewModel.Video7 = VideoDetail7.Duration; 
-            videoViewModel.Video8 = VideoDetail8.Duration; 
+            videoViewModel.Video1 = VideoDetail1.Duration;
+            videoViewModel.Video2 = VideoDetail2.Duration;
+            videoViewModel.Video3 = VideoDetail3.Duration;
+            videoViewModel.Video4 = VideoDetail4.Duration;
+            videoViewModel.Video5 = VideoDetail5.Duration;
+            videoViewModel.Video6 = VideoDetail6.Duration;
+            videoViewModel.Video7 = VideoDetail7.Duration;
+            videoViewModel.Video8 = VideoDetail8.Duration;
             videoViewModel.Video9 = VideoDetail9.Duration;
-            videoViewModel.Video10 =VideoDetail10.Duration;
-            videoViewModel.Video11 =VideoDetail11.Duration;
-            videoViewModel.Video12 =VideoDetail12.Duration;
-            videoViewModel.Video13 =VideoDetail13.Duration;
-            videoViewModel.Video14 =VideoDetail14.Duration;
-            videoViewModel.Video15 =VideoDetail15.Duration;
-            videoViewModel.Video16 =VideoDetail16.Duration;
+            videoViewModel.Video10 = VideoDetail10.Duration;
+            videoViewModel.Video11 = VideoDetail11.Duration;
+            videoViewModel.Video12 = VideoDetail12.Duration;
+            videoViewModel.Video13 = VideoDetail13.Duration;
+            videoViewModel.Video14 = VideoDetail14.Duration;
+            videoViewModel.Video15 = VideoDetail15.Duration;
+            videoViewModel.Video16 = VideoDetail16.Duration;
 
 
             videoViewModel.Video1Completed = VideoDetail1.Completed;
@@ -278,7 +278,53 @@ namespace EmployeeTest.Controllers
 
         public IActionResult Video()
         {
-            return View();
+            AdminVideoViewModel model = new AdminVideoViewModel();
+            model.TestList = (from test in _dbContext.tbl_Tests
+                              join season in _dbContext.tbl_Seasons
+                              on test.SeasonId equals season.Id
+                              where test.IsActive ?? true
+                              select new TestViewModel
+                              {
+                                  Name = test.Name + " (" + season.Name + ")",
+                                  Id = test.Id,
+                                  IsActive = test.IsActive,
+                                
+
+                              }).ToList();
+
+            var checkVideos = (from test in _dbContext.tbl_Tests
+                              join video in _dbContext.tbl_Testvideos
+                              on test.Id equals video.TestId
+                              into video
+                              from video1 in video.DefaultIfEmpty()
+                              where test.IsActive ?? true
+                              select new TestViewModel
+                              {
+                                
+                                  Id = test.Id,
+                                  VideoId = video1.Id
+
+                              }).ToList();
+
+            model.Video1 = checkVideos.Where(w => w.VideoId == 1).Select(s => s.Id).FirstOrDefault();
+            model.Video2 = checkVideos.Where(w => w.VideoId == 2).Select(s => s.Id).FirstOrDefault();
+            model.Video3 = checkVideos.Where(w => w.VideoId == 3).Select(s => s.Id).FirstOrDefault();
+            model.Video4 = checkVideos.Where(w => w.VideoId == 4).Select(s => s.Id).FirstOrDefault();
+            model.Video5 = checkVideos.Where(w => w.VideoId == 5).Select(s => s.Id).FirstOrDefault();
+            model.Video6 = checkVideos.Where(w => w.VideoId == 6).Select(s => s.Id).FirstOrDefault();
+            model.Video7 = checkVideos.Where(w => w.VideoId == 7).Select(s => s.Id).FirstOrDefault();
+            model.Video8 = checkVideos.Where(w => w.VideoId == 8).Select(s => s.Id).FirstOrDefault();
+            model.Video9 = checkVideos.Where(w => w.VideoId == 9).Select(s => s.Id).FirstOrDefault();
+            model.Video10 =checkVideos.Where(w => w.VideoId == 10).Select(s => s.Id).FirstOrDefault();
+            model.Video11 =checkVideos.Where(w => w.VideoId == 11).Select(s => s.Id).FirstOrDefault();
+            model.Video12 =checkVideos.Where(w => w.VideoId == 12).Select(s => s.Id).FirstOrDefault();
+            model.Video13 =checkVideos.Where(w => w.VideoId == 13).Select(s => s.Id).FirstOrDefault();
+            model.Video14 =checkVideos.Where(w => w.VideoId == 14).Select(s => s.Id).FirstOrDefault();
+            model.Video15 =checkVideos.Where(w => w.VideoId == 15).Select(s => s.Id).FirstOrDefault();
+            model.Video16 =checkVideos.Where(w => w.VideoId == 16).Select(s => s.Id).FirstOrDefault();
+
+            return View(model);
+
         }
 
 
@@ -301,13 +347,25 @@ namespace EmployeeTest.Controllers
         }
 
         [HttpPost]
-        public JsonResult updateSession()
+        public JsonResult updateSession(int vid, int userId)
         {
             ResponseModel response = new ResponseModel();
             try
             {
-                HttpContext.Session.SetString("ShowTest", "True");
-                response.Message = "";
+                var testId = _dbContext.tbl_Testvideos.Where(w => w.Id == vid).Select(s => s.TestId).FirstOrDefault();
+                var testVideoList = _dbContext.tbl_Testvideos.Where(w => w.TestId == testId).Select(s => s.Id).ToList();
+                var checkUserTestVideos = _dbContext.tbl_AttendentTestVideos.Where(w => w.UserId == userId && testVideoList.Contains(w.Id)).Select(s => s.IsCompleted??false).ToList();
+                if (checkUserTestVideos.Where(w=> w==false).Count()>0)
+                {
+                    response.Message = "I";
+                }
+                else
+                {
+                    response.Message = "C";
+                    HttpContext.Session.SetString("ShowTest", "True");
+                }
+                
+              
             }
             catch (Exception ex)
             {
@@ -367,6 +425,12 @@ namespace EmployeeTest.Controllers
                     }
                     else
                     {
+                        model.SeasonList = _dbContext.tbl_Seasons.Where(w => w.IsActive == true)
+                            .Select(s => new SeasonViewModel
+                            {
+                                Name = s.Name,
+                                Id = s.Id
+                            }).ToList();
                         ViewBag.ErrorMessage = "Test name is already exists";
 
                     }
@@ -453,6 +517,12 @@ namespace EmployeeTest.Controllers
                     }
                     else
                     {
+                        model.SeasonList = _dbContext.tbl_Seasons.Where(w => w.IsActive == true)
+                            .Select(s => new SeasonViewModel
+                            {
+                                Name = s.Name,
+                                Id = s.Id
+                            }).ToList();
                         ViewBag.ErrorMessage = "Test name is already exists";
 
                     }
@@ -498,6 +568,36 @@ namespace EmployeeTest.Controllers
             return Json(response);
         }
 
+        [HttpPost]
+        public JsonResult UpdateVideoTest(int vid, int testId)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                var checkVideo = _dbContext.tbl_Testvideos.Where(w => w.Id == vid).FirstOrDefault();
+                if (checkVideo != null)
+                {
+                    checkVideo.TestId = testId;
+                    checkVideo.ModifiedBy = UserId;
+                    checkVideo.ModifiedDate = DateTime.Now;
+                    _dbContext.SaveChanges();
+                    response.Status = "1";
+                    response.Message = "Video mapped successfully";
+                }
+                else
+                {
+                    response.Status = "0";
+                    response.Message = "Error occurred";
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return Json(response);
+        }
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);

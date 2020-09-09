@@ -1,0 +1,157 @@
+CREATE TABLE `menus` (
+  `MenuId` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(300) DEFAULT NULL,
+  `Parent` varchar(300) DEFAULT NULL,
+  `Action` varchar(300) DEFAULT NULL,
+  `Controller` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`MenuId`)
+);
+
+
+
+insert into menus (Name,Parent,Action,Controller ) values ('Import','CareGiver','Import','CareGiver' );
+insert into menus (Name,Parent,Action,Controller ) values ('List','CareGiver','List','CareGiver' );
+insert into menus (Name,Parent,Action,Controller ) values ('Add Test','Test Setup','Add','Test' );
+insert into menus (Name,Parent,Action,Controller ) values ('Test List','Test Setup','List','Test' );
+insert into menus (Name,Parent,Action,Controller ) values ('Add Question','Test Setup','Add','TestSetup' );
+insert into menus (Name,Parent,Action,Controller ) values ('Question List','Test Setup','List','TestSetup' );
+insert into menus (Name,Parent,Action,Controller ) values ('Add Document','Test Setup','Add','Document' );
+insert into menus (Name,Parent,Action,Controller ) values ('Document List','Test Setup','List','Document' );
+insert into menus (Name,Parent,Action,Controller ) values ('Passing Percentage','Test Setup','PassingPercentage','TestSetup' );
+insert into menus (Name,Parent,Action,Controller ) values ('Add','Season','Add','Season' );
+insert into menus (Name,Parent,Action,Controller ) values ('List','Season','List','Season' );
+insert into menus (Name,Parent,Action,Controller ) values ('Add','User','Add','User' );
+insert into menus (Name,Parent,Action,Controller ) values ('List','User','List','User' );
+
+insert into menus (Name,Parent,Action,Controller ) values ('Role','Role','List','Role' );
+insert into menus (Name,Parent,Action,Controller ) values ('Videos','Videos','Video','Test' );
+insert into menus (Name,Parent,Action,Controller ) values ('Test','Test','Exam','Attendant' );
+insert into menus (Name,Parent,Action,Controller ) values ('Videos','Videos','Videos','Test' );
+
+
+
+CREATE TABLE `userclaims` (
+  `ClaimId` int(11) NOT NULL AUTO_INCREMENT,
+  `MenuId` int(11) DEFAULT NULL,
+  `RoleId` int(11) DEFAULT NULL,
+  `IsActive` tinyint(1) DEFAULT NULL,
+  `CreatedBy` int(11) DEFAULT NULL,
+  `CreatedDate` datetime DEFAULT NULL,
+  `ModifiedBy` int(11) DEFAULT NULL,
+  `ModifiedDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`ClaimId`)
+) 
+
+
+insert into userclaims(MenuId,IsActive,CreatedBy,CreatedDate,RoleId) 
+select  MenuId,1,2,now(),2 from menus;
+
+
+
+CREATE TABLE `hr_groups` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(150) DEFAULT NULL,
+  `IsActive` bit(1) DEFAULT NULL,
+  `CreatedBy` int(11) DEFAULT NULL,
+  `CreatedDate` datetime DEFAULT NULL,
+  `ModifiedBy` int(11) DEFAULT NULL,
+  `ModifiedDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) 
+
+
+
+insert into menus (Name,Parent,Action,Controller ) values ('Add','HrGroup','Add','HrGroup' );
+insert into menus (Name,Parent,Action,Controller ) values ('List','HrGroup','List','HrGroup' );
+insert into menus (Name,Parent,Action,Controller ) values ('User Mapping','HrGroup','List','HrGroupUserMapping' );
+
+
+Alter table attendants Add column HrGroupId int;
+Alter table import_attendants Add column HrGroup varchar(100); 
+Alter table users Add column HrGroupId int;
+
+
+/*drop procedure import_employees;*/
+
+ DELIMITER $$
+CREATE  PROCEDURE `import_employees`()
+BEGIN
+declare EmployeeCount_1 int;
+declare FirstName_1 varchar(150);
+declare MiddleName_1 varchar(150);
+declare LastName_1 varchar(150);
+declare Email_1 varchar(150);
+declare EmployeeNo_1 varchar(150); 
+declare HrGroup_1 varchar(150); 
+declare HrGroupId_1 int; 
+declare error_string varchar(1000);
+declare code varchar(1000);
+declare exit handler for sqlexception
+begin
+get diagnostics condition 1
+	code = returned_sqlstate, error_string = Message_text;
+SELECT code, error_string;
+rollback;
+end;
+
+CREATE temporary TABLE Temp_Employees (FirstName varchar(150),MiddleName varchar(150),LastName varchar(150),Email varchar(150),
+EmployeeNo varchar(150), HrGroup varchar(150) );
+  
+insert into Temp_Employees (FirstName,MiddleName,LastName,Email,EmployeeNo) 
+select FirstName,MiddleName,LastName,Email,EmployeeNo,HrGroup from import_attendants ;
+
+select * from Temp_Employees;
+
+SELECT 
+    COUNT(*)
+INTO EmployeeCount_1 FROM
+    Temp_Employees;
+while EmployeeCount_1 >0
+DO
+select    FirstName,MiddleName,LastName,Email,EmployeeNo,HrGroup
+		  into 
+		  FirstName_1,MiddleName_1,LastName_1,Email_1,EmployeeNo_1,HrGroup_1
+          from Temp_Employees limit 1;
+
+select Id into HrGroupId_1  from hr_groups where name =HrGroup_1;
+
+if exists ( select * from attendants where EmployeeNo = EmployeeNo_1 )
+then
+set sql_safe_updates= 0;
+UPDATE attendants 
+SET 
+    FirstName = FirstName_1,
+    MiddleName = MiddleName_1,
+    LastName = LastName_1,
+    Email = Email_1,
+    HrGroupId = HrGroupId_1
+WHERE
+    EmployeeNo = EmployeeNo_1;
+
+else 
+	insert into attendants (FirstName,MiddleName,LastName,Email,EmployeeNo,CreatedDate,HrGroupId) 
+    values ( FirstName_1,MiddleName_1,LastName_1,Email_1,EmployeeNo_1,now(),HrGroupId_1); 
+    set sql_safe_updates= 0;
+	end if;
+
+set EmployeeCount_1 = EmployeeCount_1-1;
+set sql_safe_updates= 0;
+DELETE FROM Temp_Employees 
+WHERE
+    EmployeeNo = EmployeeNo_1;
+
+END WHILE ;
+
+drop temporary table Temp_Employees;
+truncate table import_attendants;
+END$$
+DELIMITER ;
+ 
+
+
+
+
+
+
+
+

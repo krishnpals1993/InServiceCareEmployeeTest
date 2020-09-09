@@ -29,6 +29,8 @@ namespace EmployeeTest.Controllers
             HttpContext.Session.SetString("UserId", "");
             HttpContext.Session.SetString("RoleId", "");
             HttpContext.Session.SetString("Username", "");
+            HttpContext.Session.SetString("UserMenus", "");
+            HttpContext.Session.SetString("HrGroupId", "");
             return View();
         }
 
@@ -51,8 +53,11 @@ namespace EmployeeTest.Controllers
                     else
                     {
                         CommanUtility commanUtility = new CommanUtility(_appSettings);
+                        var userMenus = commanUtility.GetUserMenus(Convert.ToString(ds.Tables[0].Rows[0]["RoleId"]));
+                        HttpContext.Session.SetString("UserMenus", JsonConvert.SerializeObject(userMenus));
                         HttpContext.Session.SetString("UserId", Convert.ToString(ds.Tables[0].Rows[0]["Userid"]));
                         HttpContext.Session.SetString("RoleName", Convert.ToString(ds.Tables[0].Rows[0]["RoleName"]));
+                        HttpContext.Session.SetString("HrGroupId", Convert.ToString(ds.Tables[0].Rows[0]["HrGroupId"]));
                         HttpContext.Session.SetString("Username", model.Username);
                         if (Convert.ToString(ds.Tables[0].Rows[0]["RoleName"]) != "CareGiver")
                         {
@@ -113,44 +118,53 @@ namespace EmployeeTest.Controllers
         [HttpPost]
         public ActionResult Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-
-                var roleId = _dbContext.tbl_Roles.Where(w => w.Rolename == "CareGiver").FirstOrDefault().RoleId;
-                var checkUser = _dbContext.tbl_Users.Where(w => w.Email == model.Email).FirstOrDefault();
-                if (checkUser == null)
+                if (ModelState.IsValid)
                 {
-                    User user = new User
-                    {
-                        Username = model.Email,
-                        Password = model.Password,
-                        Email = model.Email,
-                        IsActive = true,
-                        RoleId = roleId,
-                        CreatedDate = DateTime.Now,
 
-                    };
-                    _dbContext.tbl_Users.Add(user);
-                    _dbContext.SaveChanges();
-
-                    var attendatDetail = _dbContext.tbl_Attendants.Where(w => w.Email == model.Email).FirstOrDefault();
-                    if (attendatDetail != null)
+                    var roleId = _dbContext.tbl_Roles.Where(w => w.Rolename == "CareGiver").FirstOrDefault().RoleId;
+                    var checkUser = _dbContext.tbl_Users.Where(w => w.Email == model.Email).FirstOrDefault();
+                    if (checkUser == null)
                     {
-                        attendatDetail.UserId = user.UserId;
+                        User user = new User
+                        {
+                            Username = model.Email,
+                            Password = model.Password,
+                            Email = model.Email,
+                            IsActive = true,
+                            RoleId = roleId,
+                            CreatedDate = DateTime.Now,
+
+                        };
+                        _dbContext.tbl_Users.Add(user);
+                        _dbContext.SaveChanges();
+
+                        var attendatDetail = _dbContext.tbl_Attendants.Where(w => w.Email == model.Email).FirstOrDefault();
+                        if (attendatDetail != null)
+                        {
+                            attendatDetail.UserId = user.UserId;
+                        }
+                        _dbContext.SaveChanges();
+
+                        ViewBag.SuccessMessage = "Registration successfully";
                     }
-                    _dbContext.SaveChanges();
-
-                    ViewBag.SuccessMessage = "Registration successfully";
+                    else
+                    {
+                        ViewBag.ErrorMessage = "Employee already exist for this email";
+                    }
                 }
                 else
                 {
-                    ViewBag.ErrorMessage = "Employee already exist for this email";
+                    ViewBag.ErrorMessage = "Please enter valid detail";
                 }
             }
-            else
+            catch (Exception ex)
             {
-                ViewBag.ErrorMessage = "Please enter valid detail";
+
+            
             }
+            
 
             return View(model);
         }

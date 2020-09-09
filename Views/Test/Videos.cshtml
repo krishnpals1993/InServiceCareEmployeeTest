@@ -1,10 +1,16 @@
-﻿@model EmployeeTest.Models.CareGiverVideoViewModel
+﻿@using Microsoft.AspNetCore.Http
+@model EmployeeTest.Models.CareGiverVideoViewModel
 @{
     ViewData["Title"] = "Videos";
     var Status = ViewBag.Status;
 }
 @using Microsoft.Extensions.Options;
 @inject IOptions<Appsettings> Settings
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    String UserId = Convert.ToString(@HttpContextAccessor.HttpContext.Session.GetString("UserId"));
+}
+
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox">
@@ -14,16 +20,16 @@
         <div class="ibox-content">
             <div class="row">
                 <div class="col-lg-4">
-                    <div class="ibox ">
+                    <div class="ibox">
                         <div class="ibox-title">
-                            <h5>Video 1</h5> 
+                            <h5>Video 1</h5>
                             <label id="supposedCurrentTimeVideo1Completed" style="display:none" class="label label-primary">Watched</label>
-                            
+
                         </div>
                         <div class="ibox-content">
                             <video id="vid1" width="320" height="240" controls controlsList="nodownload">
                                 <source src="~/videos/1.mp4">
-                           </video>
+                            </video>
                         </div>
                     </div>
                 </div>
@@ -401,9 +407,8 @@
         }
 
         .text-green {
-        color:#1ab394 !important
+            color: #1ab394 !important
         }
-
     </style>
 }
 
@@ -415,6 +420,8 @@
     </environment>
 
     <script type="text/javascript">
+
+         window.userId = @UserId;
 
          $(document).ready(function () {
             $('#tbl').DataTable({
@@ -458,7 +465,8 @@
              var dataToSend = {
                  vidName: vid,
                  vid: vidName,
-                 isCompleted : isCompleted
+                 isCompleted: isCompleted,
+                 userId : window.userId
             };
              $.ajax({
                     url: "/Attendant/UpdateVideos",
@@ -466,13 +474,33 @@
                     dataType: "json",
                     data: dataToSend,
                     success: function (data) {
+                        if (data.Message=="C") {
+                              swal({
+                title: "Ready to take TEST?",
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "No",
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes",
+                closeOnConfirm: false
+            },
+                function (isConfirm) {
+                    if (!isConfirm)
+                        return;
 
+                     window.location.href = "@Settings.Value.WebBaseURL/Attendant/Exam";
+
+                  });
+                        }
                     }
                 })
 
         }
 
-        
+
+
+
+
 
         supposedCurrentTimeVideo1Completed = "@(Model.Videos.Video1Completed)" == "False" ? false : true;
         supposedCurrentTimeVideo2Completed = "@(Model.Videos.Video2Completed)" == "False" ? false : true;
@@ -539,7 +567,7 @@
         if (supposedCurrentTimeVideo16Completed) {
             $("#supposedCurrentTimeVideo16Completed").show();
         }
-                                                                              
+
          supposedCurrentTimeVideo1 = @(Model.Videos.Video1??0);
         supposedCurrentTimeVideo2 = @(Model.Videos.Video2??0);
         supposedCurrentTimeVideo3 = @(Model.Videos.Video3??0);
@@ -601,69 +629,6 @@
 
 
 
-         document.getElementById('vid1').addEventListener('loadedmetadata', function () {
-            this.currentTime = supposedCurrentTimeVideo1;
-         }, false);
-
-         document.getElementById('vid2').addEventListener('loadedmetadata', function () {
-            this.currentTime = supposedCurrentTimeVideo2;
-         }, false);
-
-         document.getElementById('vid3').addEventListener('loadedmetadata', function () {
-            this.currentTime = supposedCurrentTimeVideo3;
-        }, false);
-
-         document.getElementById('vid4').addEventListener('loadedmetadata', function () {
-            this.currentTime = supposedCurrentTimeVideo4;
-         }, false);
-
-        document.getElementById('vid5').addEventListener('loadedmetadata', function () {
-            this.currentTime = supposedCurrentTimeVideo5;
-        }, false);
-
-        document.getElementById('vid6').addEventListener('loadedmetadata', function () {
-            this.currentTime = supposedCurrentTimeVideo6;
-        }, false);
-
-        document.getElementById('vid7').addEventListener('loadedmetadata', function () {
-            this.currentTime = supposedCurrentTimeVideo7;
-        }, false);
-
-        document.getElementById('vid8').addEventListener('loadedmetadata', function () {
-            this.currentTime = supposedCurrentTimeVideo8;
-        }, false);
-
-        document.getElementById('vid9').addEventListener('loadedmetadata', function () {
-            this.currentTime = supposedCurrentTimeVideo9;
-        }, false);
-
-        document.getElementById('vid10').addEventListener('loadedmetadata', function () {
-            this.currentTime = supposedCurrentTimeVideo10;
-        }, false);
-
-        document.getElementById('vid11').addEventListener('loadedmetadata', function () {
-            this.currentTime = supposedCurrentTimeVideo11;
-        }, false);
-
-        document.getElementById('vid12').addEventListener('loadedmetadata', function () {
-            this.currentTime = supposedCurrentTimeVideo12;
-        }, false);
-
-        document.getElementById('vid13').addEventListener('loadedmetadata', function () {
-            this.currentTime = supposedCurrentTimeVideo13;
-        }, false);
-
-        document.getElementById('vid14').addEventListener('loadedmetadata', function () {
-            this.currentTime = supposedCurrentTimeVideo14;
-        }, false);
-
-        document.getElementById('vid15').addEventListener('loadedmetadata', function () {
-            this.currentTime = supposedCurrentTimeVideo15;
-        }, false);
-
-        document.getElementById('vid16').addEventListener('loadedmetadata', function () {
-            this.currentTime = supposedCurrentTimeVideo16;
-        }, false);
 
         //var vid = document.getElementById("vid1");
         //console.log(vid.currentTime);
@@ -685,6 +650,79 @@
         var video15 = document.getElementById('vid15');
         var video16 = document.getElementById('vid16');
 
+
+
+
+     document.getElementById('vid1').addEventListener('loadeddata', function () {
+            this.currentTime = supposedCurrentTimeVideo1;
+         }, false);
+
+
+
+         document.getElementById('vid2').addEventListener('loadeddata', function () {
+            this.currentTime = supposedCurrentTimeVideo2;
+         }, false);
+
+         document.getElementById('vid3').addEventListener('loadeddata', function () {
+            this.currentTime = supposedCurrentTimeVideo3;
+        }, false);
+
+         document.getElementById('vid4').addEventListener('loadeddata', function () {
+            this.currentTime = supposedCurrentTimeVideo4;
+         }, false);
+
+        document.getElementById('vid5').addEventListener('loadeddata', function () {
+            this.currentTime = supposedCurrentTimeVideo5;
+        }, false);
+
+        document.getElementById('vid6').addEventListener('loadeddata', function () {
+            this.currentTime = supposedCurrentTimeVideo6;
+        }, false);
+
+        document.getElementById('vid7').addEventListener('loadeddata', function () {
+            this.currentTime = supposedCurrentTimeVideo7;
+        }, false);
+
+        document.getElementById('vid8').addEventListener('loadeddata', function () {
+            this.currentTime = supposedCurrentTimeVideo8;
+        }, false);
+
+        document.getElementById('vid9').addEventListener('loadeddata', function () {
+            this.currentTime = supposedCurrentTimeVideo9;
+        }, false);
+
+        document.getElementById('vid10').addEventListener('loadeddata', function () {
+            this.currentTime = supposedCurrentTimeVideo10;
+        }, false);
+
+        document.getElementById('vid11').addEventListener('loadeddata', function () {
+            this.currentTime = supposedCurrentTimeVideo11;
+        }, false);
+
+        document.getElementById('vid12').addEventListener('loadeddata', function () {
+            this.currentTime = supposedCurrentTimeVideo12;
+        }, false);
+
+        document.getElementById('vid13').addEventListener('loadeddata', function () {
+            this.currentTime = supposedCurrentTimeVideo13;
+        }, false);
+
+        document.getElementById('vid14').addEventListener('loadeddata', function () {
+            this.currentTime = supposedCurrentTimeVideo14;
+        }, false);
+
+        document.getElementById('vid15').addEventListener('loadeddata', function () {
+            this.currentTime = supposedCurrentTimeVideo15;
+        }, false);
+
+        document.getElementById('vid16').addEventListener('loadeddata', function () {
+            this.currentTime = supposedCurrentTimeVideo16;
+        }, false);
+
+
+
+
+
         video1.addEventListener('timeupdate', function () {
             if (!video1.seeking) {
                 supposedCurrentTimeVideo1 = video1.currentTime;
@@ -694,11 +732,14 @@
         video1.addEventListener('seeking', function () {
             // guard agains infinite recursion:
             // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
-            if (video1.currentTime > supposedCurrentTimeVideo1) {
+            if (!supposedCurrentTimeVideo1Completed) {
+                if (video1.currentTime > supposedCurrentTimeVideo1) {
                 console.log("Seeking is disabled");
                 video1.currentTime = supposedCurrentTimeVideo1;
             }
-            
+            }
+
+
 
         });
         video1.addEventListener('ended', function () {
@@ -718,11 +759,14 @@
         video2.addEventListener('seeking', function () {
             // guard agains infinite recursion:
             // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
-            if (video2.currentTime > supposedCurrentTimeVideo2) {
+            if (!supposedCurrentTimeVideo2Completed) {
+                if (video2.currentTime > supposedCurrentTimeVideo2) {
                 console.log("Seeking is disabled");
                 video2.currentTime = supposedCurrentTimeVideo2;
             }
-            
+            }
+
+
         });
         video2.addEventListener('ended', function () {
             // reset state in order to allow for rewind
@@ -742,11 +786,14 @@
         video3.addEventListener('seeking', function () {
             // guard agains infinite recursion:
             // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
-            if (video3.currentTime > supposedCurrentTimeVideo3) {
+            if (!supposedCurrentTimeVideo3Completed) {
+                if (video3.currentTime > supposedCurrentTimeVideo3) {
                 console.log("Seeking is disabled");
                 video3.currentTime = supposedCurrentTimeVideo3;
             }
-            
+            }
+
+
         });
         video3.addEventListener('ended', function () {
             // reset state in order to allow for rewind
@@ -765,11 +812,14 @@
         video4.addEventListener('seeking', function () {
             // guard agains infinite recursion:
             // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
-            if (video4.currentTime > supposedCurrentTimeVideo4) {
+            if (!supposedCurrentTimeVideo4Completed) {
+                if (video4.currentTime > supposedCurrentTimeVideo4) {
                 console.log("Seeking is disabled");
                 video4.currentTime = supposedCurrentTimeVideo4;
             }
-            
+            }
+
+
         });
         video4.addEventListener('ended', function () {
             // reset state in order to allow for rewind
@@ -789,11 +839,14 @@
         video5.addEventListener('seeking', function () {
             // guard agains infinite recursion:
             // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
-            if (video5.currentTime > supposedCurrentTimeVideo5) {
+            if (!supposedCurrentTimeVideo5Completed) {
+                if (video5.currentTime > supposedCurrentTimeVideo5) {
                 console.log("Seeking is disabled");
                 video5.currentTime = supposedCurrentTimeVideo5;
             }
-             
+            }
+
+
         });
         video5.addEventListener('ended', function () {
             // reset state in order to allow for rewind
@@ -813,11 +866,14 @@
         video6.addEventListener('seeking', function () {
             // guard agains infinite recursion:
             // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
-            if (video6.currentTime > supposedCurrentTimeVideo6) {
+            if (!supposedCurrentTimeVideo6Completed) {
+                if (video6.currentTime > supposedCurrentTimeVideo6) {
                 console.log("Seeking is disabled");
                 video6.currentTime = supposedCurrentTimeVideo6;
             }
-             
+            }
+
+
         });
         video6.addEventListener('ended', function () {
             // reset state in order to allow for rewind
@@ -836,11 +892,14 @@
         video7.addEventListener('seeking', function () {
             // guard agains infinite recursion:
             // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
-            if (video7.currentTime > supposedCurrentTimeVideo7) {
+            if (!supposedCurrentTimeVideo7Completed) {
+                if (video7.currentTime > supposedCurrentTimeVideo7) {
                 console.log("Seeking is disabled");
                 video7.currentTime = supposedCurrentTimeVideo7;
             }
-             
+            }
+
+
         });
         video7.addEventListener('ended', function () {
             // reset state in order to allow for rewind
@@ -860,11 +919,14 @@
         video8.addEventListener('seeking', function () {
             // guard agains infinite recursion:
             // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
-            if (video8.currentTime > supposedCurrentTimeVideo8) {
+            if (!supposedCurrentTimeVideo8Completed) {
+                if (video8.currentTime > supposedCurrentTimeVideo8) {
                 console.log("Seeking is disabled");
                 video8.currentTime = supposedCurrentTimeVideo8;
             }
-             
+            }
+
+
         });
         video8.addEventListener('ended', function () {
             // reset state in order to allow for rewind
@@ -872,30 +934,7 @@
             supposedCurrentTimeVideo8 = 0;
             $(".vid9Panel").show();
             updateVideo(video8.currentTime, 8, true);
-              swal({
-                title: "Ready to take TEST?",
-                type: "warning",
-                showCancelButton: true,
-                cancelButtonText: "No",
-                confirmButtonClass: "btn-danger",
-                confirmButtonText: "Yes",
-                closeOnConfirm: false
-            },
-                function (isConfirm) {
-                    if (!isConfirm)
-                        return;
 
-                      $.ajax({
-                    url: "/Test/updateSession",
-                    type: "POST",
-                    dataType: "json",
-                      success: function (data) {
-                        window.location.href = "@Settings.Value.WebBaseURL/Attendant/Exam";
-                    }
-                })
-
-
-                  });
         });
 
         video9.addEventListener('timeupdate', function () {
@@ -907,11 +946,14 @@
         video9.addEventListener('seeking', function () {
             // guard agains infinite recursion:
             // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
-            if (video9.currentTime > supposedCurrentTimeVideo9) {
+            if (!supposedCurrentTimeVideo9Completed) {
+                if (video9.currentTime > supposedCurrentTimeVideo9) {
                 console.log("Seeking is disabled");
                 video9.currentTime = supposedCurrentTimeVideo9;
             }
-             
+            }
+
+
         });
         video9.addEventListener('ended', function () {
             // reset state in order to allow for rewind
@@ -931,11 +973,14 @@
         video10.addEventListener('seeking', function () {
             // guard agains infinite recursion:
             // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
-            if (video10.currentTime > supposedCurrentTimeVideo10) {
+            if (!supposedCurrentTimeVideo10Completed) {
+                if (video10.currentTime > supposedCurrentTimeVideo10) {
                 console.log("Seeking is disabled");
                 video10.currentTime = supposedCurrentTimeVideo10;
             }
-             
+            }
+
+
         });
         video10.addEventListener('ended', function () {
             // reset state in order to allow for rewind
@@ -956,11 +1001,13 @@
         video11.addEventListener('seeking', function () {
             // guard agains infinite recursion:
             // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+            if (!supposedCurrentTimeVideo11Completed) {
             if (video11.currentTime > supposedCurrentTimeVideo11) {
                 console.log("Seeking is disabled");
                 video11.currentTime = supposedCurrentTimeVideo11;
-            }
-             
+            }}
+
+
         });
         video11.addEventListener('ended', function () {
             // reset state in order to allow for rewind
@@ -979,11 +1026,14 @@
         video12.addEventListener('seeking', function () {
             // guard agains infinite recursion:
             // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
-            if (video12.currentTime > supposedCurrentTimeVideo12) {
+            if (!supposedCurrentTimeVideo12Completed) {
+                if (video12.currentTime > supposedCurrentTimeVideo12) {
                 console.log("Seeking is disabled");
                 video12.currentTime = supposedCurrentTimeVideo12;
             }
-             
+            }
+
+
         });
         video12.addEventListener('ended', function () {
             // reset state in order to allow for rewind
@@ -1003,11 +1053,14 @@
         video13.addEventListener('seeking', function () {
             // guard agains infinite recursion:
             // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
-            if (video13.currentTime > supposedCurrentTimeVideo13) {
+            if (!supposedCurrentTimeVideo13Completed) {
+                if (video13.currentTime > supposedCurrentTimeVideo13) {
                 console.log("Seeking is disabled");
                 video13.currentTime = supposedCurrentTimeVideo13;
             }
-             
+            }
+
+
         });
         video13.addEventListener('ended', function () {
             // reset state in order to allow for rewind
@@ -1027,11 +1080,14 @@
         video14.addEventListener('seeking', function () {
             // guard agains infinite recursion:
             // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
-            if (video14.currentTime > supposedCurrentTimeVideo14) {
+            if (!supposedCurrentTimeVideo14Completed) {
+                if (video14.currentTime > supposedCurrentTimeVideo14) {
                 console.log("Seeking is disabled");
                 video14.currentTime = supposedCurrentTimeVideo14;
             }
-             
+            }
+
+
         });
         video14.addEventListener('ended', function () {
             // reset state in order to allow for rewind
@@ -1039,30 +1095,7 @@
             updateVideo(video14.currentTime,14,true);
             supposedCurrentTimeVideo14 = 0;
             $(".vid15Panel").show();
-              swal({
-                title: "Ready to take TEST?",
-                type: "warning",
-                showCancelButton: true,
-                cancelButtonText: "No",
-                confirmButtonClass: "btn-danger",
-                confirmButtonText: "Yes",
-                closeOnConfirm: false
-            },
-                function (isConfirm) {
-                    if (!isConfirm)
-                        return;
 
-                      $.ajax({
-                    url: "/Test/updateSession",
-                    type: "POST",
-                    dataType: "json",
-                      success: function (data) {
-                        window.location.href = "@Settings.Value.WebBaseURL/Attendant/Exam";
-                    }
-                })
-
-
-                  });
         });
 
 
@@ -1075,11 +1108,15 @@
         video15.addEventListener('seeking', function () {
             // guard agains infinite recursion:
             // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
-            if (video15.currentTime > supposedCurrentTimeVideo15) {
+            if (!supposedCurrentTimeVideo15Completed) {
+
+                if (video15.currentTime > supposedCurrentTimeVideo15) {
                 console.log("Seeking is disabled");
                 video15.currentTime = supposedCurrentTimeVideo15;
             }
-             
+            }
+
+
         });
         video15.addEventListener('ended', function () {
             // reset state in order to allow for rewind
@@ -1099,43 +1136,20 @@
         video16.addEventListener('seeking', function () {
             // guard agains infinite recursion:
             // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
-            if (video16.currentTime > supposedCurrentTimeVideo16) {
+            if (!supposedCurrentTimeVideo16Completed) {
+                if (video16.currentTime > supposedCurrentTimeVideo16) {
                 console.log("Seeking is disabled");
                 video16.currentTime = supposedCurrentTimeVideo16;
             }
-             
+            }
+
+
         });
         video16.addEventListener('ended', function () {
              updateVideo(video16.currentTime,16,true);
             // reset state in order to allow for rewind
             $("#supposedCurrentTimeVideo16Completed").show();
             supposedCurrentTimeVideo16 = 0;
-              swal({
-                title: "Ready to take TEST?",
-                type: "warning",
-                showCancelButton: true,
-                cancelButtonText: "No",
-                confirmButtonClass: "btn-danger",
-                confirmButtonText: "Yes",
-                closeOnConfirm: false
-            },
-                function (isConfirm) {
-                    if (!isConfirm)
-                        return;
-
-                      $.ajax({
-                    url: "/Test/updateSession",
-                    type: "POST",
-                    dataType: "json",
-                      success: function (data) {
-                        window.location.href = "@Settings.Value.WebBaseURL/Attendant/Exam";
-                    }
-                })
-
-
-                  });
-
-
 
         });
 

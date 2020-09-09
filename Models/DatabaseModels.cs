@@ -23,6 +23,9 @@ namespace EmployeeTest.Models
         public DbSet<AttendentTestVideo> tbl_AttendentTestVideos { get; set; }
         public DbSet<Season> tbl_Seasons { get; set; }
         public DbSet<Test> tbl_Tests { get; set; }
+        public DbSet<Menu> tbl_Menus { get; set; }
+        public DbSet<Userclaim> tbl_Userclaim { get; set; }
+        public DbSet<HrGroup> tbl_HrGroups { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,7 +49,9 @@ namespace EmployeeTest.Models
         public DateTime? CreatedDate { get; set; }
         public int? ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
-       
+        public int? HrGroupId { get; set; }
+
+
     }
 
     [Table("roles")]
@@ -79,10 +84,8 @@ namespace EmployeeTest.Models
         public string Status { get; set; }
         public DateTime? CreatedDate { get; set; }
         public int? UserId { get; set; }
-        public decimal? Video1 { get; set; }
-        public decimal? Video2 { get; set; }
-        public decimal? Video3 { get; set; }
-        public int CreatedBy { get; set; }
+        public int ? CreatedBy { get; set; }
+        public int? HrGroupId { get; set; }
     }
 
     [Table("import_attendants")]
@@ -96,7 +99,8 @@ namespace EmployeeTest.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public string EmployeeNo { get; set; }
-     
+        public string HrGroup { get; set; }
+
     }
 
     [Table("questions")]
@@ -135,7 +139,7 @@ namespace EmployeeTest.Models
         public string Signature { get; set; }
         public bool? IsLocked { get; set; }
         public bool? IsReset { get; set; }
-      
+
     }
 
     [Table("user_test_answers")]
@@ -167,7 +171,7 @@ namespace EmployeeTest.Models
         public DateTime? ModifiedDate { get; set; }
         public int? SeasonId { get; set; }
     }
-
+    
     [Table("test_passing_percentage")]
     public class TestPassingPercentage
     {
@@ -210,8 +214,7 @@ namespace EmployeeTest.Models
         public decimal Duration { get; set; }
         public int UserId { get; set; }
         public bool? IsCompleted { get; set; }
-
-   }
+    }
 
     [Table("seasons")]
     public class Season
@@ -243,7 +246,53 @@ namespace EmployeeTest.Models
         public DateTime? CreatedDate { get; set; }
         public int? ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
-        
+
+
+    }
+
+    [Table("menus")]
+    public class Menu
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int MenuId { get; set; }
+
+        public string Name { get; set; }
+        public string Parent { get; set; }
+        public string Action { get; set; }
+        public string Controller { get; set; }
+        public string Childmenus { get; set; }
+
+    }
+
+    [Table("userclaims")]
+    public class Userclaim
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ClaimId { get; set; }
+        public int MenuId { get; set; }
+        public bool? IsActive { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public int? ModifiedBy { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+        public int RoleId { get; set; }
+
+    }
+
+    [Table("hr_groups")]
+    public class HrGroup
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool? IsActive { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public int? ModifiedBy { get; set; }
+        public DateTime? ModifiedDate { get; set; }
 
     }
 

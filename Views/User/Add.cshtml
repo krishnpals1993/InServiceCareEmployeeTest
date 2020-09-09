@@ -71,6 +71,17 @@
                                 </div>
 
                             </div>
+
+                            <div class="row form-group ">
+                                <div class="col-md-2">
+                                    <label class="col-form-label">Group </label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.DropDownListFor(model => model.HrGroupId, new SelectList(Model.HrGroupList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"), "Select Group", new { @class = "form-control", @placeholder = "Select Group" })
+                                    <span asp-validation-for="HrGroupId" class="text-danger"></span>
+                                </div>
+
+                            </div>
                         </div>
 
                         <div class="row form-group">
@@ -100,11 +111,13 @@
                             <p class="text-danger">@ViewBag.ErrorMessage</p>
                         }
 
+                        @Html.ValidationSummary("", new { @class = "text-danger" })
+
                         <div class="hr-line-dashed"></div>
                         <div class="form-group row">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <a class="btn btn-white btn-sm" asp-action="UserList">Cancel</a>
-                                <button class="btn btn-primary btn-sm" type="submit">Save</button>
+                                <a class="btn btn-white btn-sm" asp-action="List">Cancel</a>
+                                <button class="btn btn-primary btn-sm" onclick="return checkValues()" type="submit">Save</button>
                             </div>
                         </div>
                     </form>
@@ -141,22 +154,45 @@
             $("#FirstName").val(" ");
             $("#MiddleName").val(" ");
             $("#EmployeeNo").val(" ");
+            $("#LastName").val(" ");
+            $("#HrGroupId").val("1");
 
-        $("#RoleId").on("change", function () {
-            if ($("#RoleId").val() == "1") {
-                  $("#FirstName").val("");
-                  $("#MiddleName").val("");
-                  $("#EmployeeNo").val("");
-                  $("#divCareGiver").show();
+            $("#RoleId").on("change", function () {
+
+                if ($("#RoleId").val() == "1") {
+                    $("#FirstName").val("");
+                    $("#MiddleName").val("");
+                    $("#EmployeeNo").val("");
+                    $("#LastName").val("");
+                    $("#HrGroupId").val("");
+                    $("#divCareGiver").show();
                 }
                 else {
-                  $("#FirstName").val(" ");
-            $("#MiddleName").val(" ");
-            $("#EmployeeNo").val(" ");
+                    $("#FirstName").val(" ");
+                    $("#MiddleName").val(" ");
+                    $("#EmployeeNo").val(" ");
+                    $("#LastName").val(" ");
+                    $("#HrGroupId").val("1");
                     $("#divCareGiver").hide();
                 }
             });
 
         });
+
+
+         function checkValues() {
+               if ($("#RoleId").val() != "1") {
+                   $("#FirstName").val("a");
+                   $("#MiddleName").val("a");
+                   $("#EmployeeNo").val("a");
+                   $("#LastName").val("a");
+                   $("#HrGroupId").val("1");
+                  
+                }
+
+            }
+        
+
+
     </script>
 }

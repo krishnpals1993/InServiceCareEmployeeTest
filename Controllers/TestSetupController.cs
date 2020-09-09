@@ -53,7 +53,7 @@ namespace EmployeeTest.Controllers
                                  Choice5 = s.Choice5,
                                  Answer = s.Answer,
                                  QuestionId = s.Id,
-                                 TestName = test1.Name ,
+                                 TestName = test1.Name,
                                  SeasonName = season1.Name
 
                              }).ToList();
@@ -72,6 +72,7 @@ namespace EmployeeTest.Controllers
             model.TestList = (from test in _dbContext.tbl_Tests
                               join season in _dbContext.tbl_Seasons
                               on test.SeasonId equals season.Id
+                              where test.IsActive??true
                               select new TestViewModel
                               {
                                   Name = test.Name + " (" + season.Name + ")",
@@ -104,7 +105,7 @@ namespace EmployeeTest.Controllers
                             Choice5 = s.Choice5,
                             Answer = s.Answer,
                             QuestionId = s.Id,
-                            TestId =s.TestId??0
+                            TestId = s.TestId ?? 0
 
                         }).FirstOrDefault();
 
@@ -143,10 +144,8 @@ namespace EmployeeTest.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    DbfunctionUtility dbfunction = new DbfunctionUtility(_appSettings);
-                    var query = "select * from questions where Question = '" + model.Question + "'";
-                    DataSet ds = dbfunction.GetDataset(query);
-                    if (ds.Tables[0].Rows.Count == 0)
+                    var checkQuestion = _dbContext.tbl_Questions.Where(w => w.TestId == model.TestId && w.Question == model.Question).FirstOrDefault();
+                    if (checkQuestion == null)
                     {
                         if (Convert.ToString(model.Choice3) == "")
                         {
@@ -171,13 +170,38 @@ namespace EmployeeTest.Controllers
                             }
                         }
 
-                        query = "insert into questions (Question,`Choice1`,Choice2,Choice3,Choice4,Choice5 , Answer , IsActive,CreatedBy,CreatedDate, TestId) values ('" + model.Question + "', '" + model.Choice1 + "', '" + model.Choice2 + "', '" + model.Choice3 + "', '" + model.Choice4 + "', '" + model.Choice5 + "', '" + model.Answer + "', true,1, now(),"+model.TestId+");";
-                        ds = dbfunction.GetDataset(query);
+                        Questions question = new Questions()
+                        {
+                            Question = model.Question,
+                            Choice1 = model.Choice1,
+                            Choice2 = model.Choice2,
+                            Choice3 = model.Choice3,
+                            Choice4 = model.Choice4,
+                            Choice5 = model.Choice5,
+                            Answer = model.Answer,
+                            IsActive = true,
+                            CreatedBy = UserId,
+                            CreatedDate = DateTime.Now,
+                            TestId = model.TestId
+                        };
+
+                        _dbContext.tbl_Questions.Add(question);
+                        _dbContext.SaveChanges();
+
                         ViewBag.SuccessMessage = "Question added successfully";
                     }
                     else
                     {
                         ViewBag.ErrorMessage = "Question is already exists";
+                        model.TestList = (from test in _dbContext.tbl_Tests
+                                          join season in _dbContext.tbl_Seasons
+                                          on test.SeasonId equals season.Id
+                                          select new TestViewModel
+                                          {
+                                              Name = test.Name + " (" + season.Name + ")",
+                                              Id = test.Id,
+                                              IsActive = test.IsActive
+                                          }).ToList();
                     }
                 }
             }
@@ -196,9 +220,8 @@ namespace EmployeeTest.Controllers
                 if (ModelState.IsValid)
                 {
                     DbfunctionUtility dbfunction = new DbfunctionUtility(_appSettings);
-                    var query = "select * from questions where Question = '" + model.Question + "' and Id !='" + model.QuestionId + "' ";
-                    DataSet ds = dbfunction.GetDataset(query);
-                    if (ds.Tables[0].Rows.Count == 0)
+                    var checkQuestion = _dbContext.tbl_Questions.Where(w => w.TestId == model.TestId && w.Question == model.Question && w.Id != model.QuestionId).FirstOrDefault();
+                    if (checkQuestion == null)
                     {
                         if (Convert.ToString(model.Choice3) == "")
                         {
@@ -223,13 +246,34 @@ namespace EmployeeTest.Controllers
                             }
                         }
 
-                        query = " update questions set TestId="+model.TestId+",  Answer='" + model.Answer + "' ,   Question = '" + model.Question + "',`Choice1`= '" + model.Choice1 + "',Choice2 = '" + model.Choice2 + "',Choice3 = '" + model.Choice3 + "',Choice4 = '" + model.Choice4 + "',Choice5 = '" + model.Choice5 + "', ModifiedBy =1 ,ModifiedDate = now() where Id = " + model.QuestionId + " ;";
-                        ds = dbfunction.GetDataset(query);
+                        var question = _dbContext.tbl_Questions.Where(w => w.Id == model.QuestionId).FirstOrDefault();
+                        question.Question = model.Question;
+                        question.Choice1 = model.Choice1;
+                        question.Choice2 = model.Choice2;
+                        question.Choice3 = model.Choice3;
+                        question.Choice4 = model.Choice4;
+                        question.Choice5 = model.Choice5;
+                        question.TestId = model.TestId;
+                        question.Answer = model.Answer;
+                        question.ModifiedBy = UserId;
+                        question.ModifiedDate = DateTime.Now;
+                        _dbContext.SaveChanges();
+
+
                         ViewBag.SuccessMessage = "Question updated successfully";
                     }
                     else
                     {
                         ViewBag.ErrorMessage = "Question is already exists";
+                        model.TestList = (from test in _dbContext.tbl_Tests
+                                          join season in _dbContext.tbl_Seasons
+                                          on test.SeasonId equals season.Id
+                                          select new TestViewModel
+                                          {
+                                              Name = test.Name + " (" + season.Name + ")",
+                                              Id = test.Id,
+                                              IsActive = test.IsActive
+                                          }).ToList();
                     }
                 }
             }

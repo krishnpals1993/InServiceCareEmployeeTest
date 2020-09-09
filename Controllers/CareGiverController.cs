@@ -10,6 +10,11 @@ using EmployeeTest.Utility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using JqueryDataTables.ServerSide.AspNetCoreWeb.Infrastructure;
+using JqueryDataTables.ServerSide.AspNetCoreWeb.Models;
+using System.Text.Json;
 
 namespace EmployeeTest.Controllers
 {
@@ -19,85 +24,146 @@ namespace EmployeeTest.Controllers
         private readonly IOptions<Appsettings> _appSettings;
         private readonly DBContext _dbContext;
         private readonly IOptions<EmailSettings> _emailSettings;
-
-        public CareGiverController(IOptions<Appsettings> appSettings, DBContext dbContext, IOptions<EmailSettings> emailSettings)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IConfigurationProvider _mappingConfiguration;
+        private ISession _session => _httpContextAccessor.HttpContext.Session;
+        private string _rolename = "";
+        private int _HrGroupId = 0;
+        private int UserId = 0;
+        public CareGiverController(IOptions<Appsettings> appSettings, DBContext dbContext, IOptions<EmailSettings> emailSettings, IHttpContextAccessor HttpContextAccessor, IConfigurationProvider mappingConfiguration)
         {
             _appSettings = appSettings;
             _dbContext = dbContext;
             _emailSettings = emailSettings;
+            _httpContextAccessor = HttpContextAccessor;
+            _mappingConfiguration = mappingConfiguration;
+            _rolename = _session.GetString("RoleName");
+            int.TryParse(_session.GetString("HrGroupId"), out _HrGroupId);
+            int.TryParse(_session.GetString("UserId"), out UserId);
         }
 
         public IActionResult List()
         {
-            var employees = new List<EmployeeViewModel>();
+            return View(new EmployeeViewModel_datatable());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LoadTable([FromBody]JqueryDataTablesParameters param)
+        {
             try
             {
-                //var totalQuestions = _dbContext.tbl_Questions.Where(w => w.IsActive == true).Count();
-                var checkPercentage = _dbContext.tbl_TestPassingPercentages.Where(w => w.TestId == 1).Select(s => s.Value).FirstOrDefault();
-                int iCheckPercentage = (checkPercentage == 0 ? (85) : Convert.ToInt32(checkPercentage));
-                employees = (from emp in _dbContext.tbl_Attendants
-                                 //join user_test in _dbContext.tbl_UserTests
-                                 //on emp.UserId equals user_test.UserId
-                                 //into user_test
-                                 //from user_test1 in user_test.DefaultIfEmpty()
-                                 //where (user_test1.Id > 0 ? user_test1.IsReset == false : true)
-                             select new EmployeeViewModel
-                             {
-                                 EmployeeId = emp.Id,
-                                 FirstName = emp.FirstName,
-                                 MiddleName = emp.MiddleName,
-                                 LastName = emp.LastName,
-                                 Email = emp.Email,
-                                 EmployeeNo = emp.EmployeeNo,
-                                 UserId = emp.UserId ?? 0,
+                HttpContext.Session.SetString(nameof(JqueryDataTablesParameters), JsonSerializer.Serialize(param));
+                IQueryable<EmployeeViewModel_datatable> employees;
+                string queryDef = "call get_careGiverList()";
+                DbfunctionUtility dbfunction = new DbfunctionUtility(_appSettings);
+                CommanUtility _commanUtility = new CommanUtility(_appSettings);
+                DateTime startDate = new DateTime(); DateTime endDate = new DateTime(); int i = 0; bool isDateFilter = false;
+                DataSet ds = new DataSet();
 
-                             }).ToList();
-                foreach (var employee in employees)
+                foreach (var column in param.AdditionalValues)
                 {
-                    employee.TestList = _dbContext.tbl_Tests.Select(s => new CareGiverTestViewModel
+                    if (Convert.ToString(column) != "")
                     {
-                        TestId = s.Id,
-                        Name = s.Name
-                    }).ToList();
-                    int passesTest = 0;
-                    if (employee.UserId > 0)
-                    {
+                        isDateFilter = true;
+                        var dateParts = column.Split("/");
 
-                        foreach (var item in employee.TestList)
+                       // var date = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+                        if (i == 0)
                         {
-                            var checkTest = _dbContext.tbl_UserTests.Where(w => w.UserId == employee.UserId && w.TestId == item.TestId).FirstOrDefault();
-                            if (checkTest != null)
-                            {
-                                var totalQuestions = _dbContext.tbl_Questions.Where(w => w.IsActive == true && w.TestId == item.TestId).Count();
-                                if (((int)Math.Round((double)(100 * checkTest.QuestionsRight.Value) / totalQuestions)) >= iCheckPercentage)
-                                {
-                                    passesTest++;
-                                }
 
 
-                            }
-
+                            DateTime.TryParse(column, out startDate);
                         }
-                        employee.PassedTest = passesTest;
-                        employee.Totaltest = employee.TestList.Count();
-
-                        var videoDuration = _dbContext.tbl_AttendentTestVideos.Where(w => w.UserId == employee.UserId).Sum(s => s.Duration);
-                        employee.VideoDuration = videoDuration;
-
+                        else if (i == 1)
+                        {
+                            DateTime.TryParse(column, out endDate);
+                        }
 
                     }
+                    i++;
+                }
+
+                if (isDateFilter == false)
+                {
+                    ds = dbfunction.GetDataset(@"call get_careGiverList()");
+                }
+                else
+                {
+                    ds = dbfunction.GetDataset(@"call get_careGiverListByDate('" + startDate.ToString("yyyy/MM/dd") + "','" + endDate.ToString("yyyy/MM/dd") + "') ");
+                }
+
+                employees = (from row in ds.Tables[0].AsEnumerable()
+                             select new EmployeeViewModel_datatable
+                             {
+                                 EmployeeId = Convert.ToInt32(row["Id"]),
+                                 FirstName = Convert.ToString(row["FirstName"]),
+                                 MiddleName = Convert.ToString(row["MiddleName"]),
+                                 LastName = Convert.ToString(row["LastName"]),
+                                 Email = Convert.ToString(row["Email"]),
+                                 EmployeeNo = Convert.ToString(row["EmployeeNo"]),
+                                 UserId = Convert.ToInt32(row["UserId"]),
+                                 HrGroupName = Convert.ToString(row["HrGroup"]),
+                                 HrGroupId = Convert.ToInt32(row["HrGroupId"]),
+                                 PassedTest = Convert.ToInt32(row["PassedTest"]),
+                                 Totaltest = Convert.ToInt32(row["total_tests_1"]),
+                                 VideoDuration = Convert.ToString(row["VideoDuration"]) == "" ? (Decimal?)null : Convert.ToDecimal(row["VideoDuration"]),
+                                 ExamDate = Convert.ToString(row["ExamDate"]) == "" ? (DateTime?)null : Convert.ToDateTime(row["ExamDate"]),
+                                 ValidEmail = _commanUtility.CheckValidEmail(Convert.ToString(row["Email"]))
+
+                             }).AsQueryable();
+
+                if (_rolename.ToLower() == "hr")
+                {
+                    employees = employees.Where(w => w.HrGroupId == _HrGroupId).AsQueryable();
+                }
+
+
+                employees = SearchOptionsProcessor<EmployeeViewModel_datatable, EmployeeViewModel_datatable>.Apply(employees, param.Columns);
+                employees = SortOptionsProcessor<EmployeeViewModel_datatable, EmployeeViewModel_datatable>.Apply(employees, param);
+
+                var size = employees.Count();
+
+
+                if (Convert.ToString(param.Search?.Value) != "")
+                {
+                    var serchValue = param.Search?.Value.ToLower();
+                    employees = employees.Where(w =>
+                                  (w.FirstName.ToLower().Contains(serchValue) ? true :
+                                  (w.MiddleName.ToLower().Contains(serchValue) ? true :
+                                  ((w.LastName.ToLower().Contains(serchValue) ? true :
+                                  ((w.EmployeeNo.ToLower().Contains(serchValue) ? true :
+                                  ((w.Email.ToLower().Contains(serchValue) ? true :
+                                   ((w.HrGroupName.ToLower().Contains(serchValue) ? true : false))))))))
+                                )));
 
                 }
 
+                var items = employees
+                   .Skip((param.Start / param.Length) * param.Length)
+                   .Take(param.Length)
+                   .ProjectTo<EmployeeViewModel_datatable>(_mappingConfiguration)
+                   .ToArray();
+
+
+                var result = new JqueryDataTablesPagedResults<EmployeeViewModel_datatable>
+                {
+                    Items = items,
+                    TotalSize = size
+                };
+
+                return new JsonResult(new JqueryDataTablesResult<EmployeeViewModel_datatable>
+                {
+                    Draw = param.Draw,
+                    Data = result.Items,
+                    RecordsFiltered = result.TotalSize,
+                    RecordsTotal = result.TotalSize
+                });
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-
+                Console.Write(e.Message);
+                return new JsonResult(new { error = "Internal Server Error" });
             }
-
-
-
-            return View(employees);
         }
 
         public IActionResult Import()
@@ -131,6 +197,7 @@ namespace EmployeeTest.Controllers
                         string LastName = "";
                         string Email = "";
                         string EmployeeNo = "";
+                        string HrGroup = "";
 
 
                         FirstName = Convert.ToString(rows[0]);
@@ -138,6 +205,7 @@ namespace EmployeeTest.Controllers
                         LastName = Convert.ToString(rows[2]);
                         Email = (Convert.ToString(rows[3]));
                         EmployeeNo = (Convert.ToString(rows[4]));
+                        HrGroup = (Convert.ToString(rows[5]));
 
 
                         attendantList.Add(new Import_attendant
@@ -146,7 +214,9 @@ namespace EmployeeTest.Controllers
                             MiddleName = MiddleName,
                             LastName = LastName,
                             Email = Email,
-                            EmployeeNo = EmployeeNo
+                            EmployeeNo = EmployeeNo,
+                            HrGroup = HrGroup
+
                         });
                     }
                 }
@@ -241,7 +311,7 @@ namespace EmployeeTest.Controllers
             TestUtility _testUtility = new TestUtility(_appSettings, _dbContext);
             var checkPercentage = _dbContext.tbl_TestPassingPercentages.Where(w => w.TestId == 1).Select(s => s.Value).FirstOrDefault();
             int iCheckPercentage = (checkPercentage == 0 ? (85) : Convert.ToInt32(checkPercentage));
-           
+
             var employee = (from emp in _dbContext.tbl_Attendants
                             where emp.Id == id
                             select new EmployeeViewModel
@@ -266,12 +336,12 @@ namespace EmployeeTest.Controllers
             if (employee?.UserId > 0)
             {
 
-                
-               
+
+
 
                 foreach (var item in employee.TestList)
                 {
-                    var checkTest = _dbContext.tbl_UserTests.Where(w => w.UserId == employee.UserId && w.TestId == item.TestId).FirstOrDefault();
+                    var checkTest = _dbContext.tbl_UserTests.Where(w => w.UserId == employee.UserId && w.TestId == item.TestId && w.IsReset == false).FirstOrDefault();
                     if (checkTest != null)
                     {
                         var totalQuestions = _dbContext.tbl_Questions.Where(w => w.IsActive == true && w.TestId == item.TestId).Count();
@@ -295,7 +365,7 @@ namespace EmployeeTest.Controllers
                     }
                 }
 
-               
+
 
             }
             employee.PassedTest = passesTest;
@@ -319,69 +389,125 @@ namespace EmployeeTest.Controllers
 
         public IActionResult GetCareGiverListByDate(DateTime startDate, DateTime endDate)
         {
-            var checkPercentage = _dbContext.tbl_TestPassingPercentages.Where(w => w.TestId == 1).Select(s => s.Value).FirstOrDefault();
-            int iCheckPercentage = (checkPercentage == 0 ? (85) : Convert.ToInt32(checkPercentage));
-
-
-            var careGiverList = (from emp in _dbContext.tbl_Attendants
+            var careGiverList = new List<EmployeeViewModel>();
+            try
+            {
+                DbfunctionUtility dbfunction = new DbfunctionUtility(_appSettings);
+                DataSet ds = dbfunction.GetDataset(@"call get_careGiverListByDate('" + startDate.ToString("yyyy/MM/dd") + "','" + endDate.ToString("yyyy/MM/dd") + "') ");
+                careGiverList = (from row in ds.Tables[0].AsEnumerable()
                                  select new EmployeeViewModel
                                  {
-                                     EmployeeId = emp.Id,
-                                     FirstName = emp.FirstName,
-                                     MiddleName = emp.MiddleName,
-                                     LastName = emp.LastName,
-                                     Email = emp.Email,
-                                     EmployeeNo = emp.EmployeeNo,
-                                     UserId = emp.UserId ?? 0,
-
+                                     EmployeeId = Convert.ToInt32(row["Id"]),
+                                     FirstName = Convert.ToString(row["FirstName"]),
+                                     MiddleName = Convert.ToString(row["MiddleName"]),
+                                     LastName = Convert.ToString(row["LastName"]),
+                                     Email = Convert.ToString(row["Email"]),
+                                     EmployeeNo = Convert.ToString(row["EmployeeNo"]),
+                                     UserId = Convert.ToInt32(row["UserId"]),
+                                     HrGroupName = Convert.ToString(row["HrGroup"]),
+                                     HrGroupId = Convert.ToInt32(row["HrGroupId"]),
+                                     PassedTest = Convert.ToInt32(row["PassedTest"]),
+                                     Totaltest = Convert.ToInt32(row["total_tests_1"]),
+                                     VideoDuration = Convert.ToString(row["VideoDuration"]) == "" ? (Decimal?)null : Convert.ToDecimal(row["VideoDuration"]),
+                                     ExamDate = Convert.ToString(row["ExamDate"]) == "" ? (DateTime?)null : Convert.ToDateTime(row["ExamDate"])
                                  }).ToList();
-
-            foreach (var employee in careGiverList)
+            }
+            catch (Exception ex)
             {
-                employee.TestList = (from test in _dbContext.tbl_Tests
-                                     join user_test in _dbContext.tbl_UserTests
-                                    on test.Id equals user_test.TestId
-                                     where user_test.IsReset == false
-                                     && user_test.EndDate >= startDate && user_test.EndDate <= endDate
-                                     && user_test.UserId == employee.UserId
-                                     select new CareGiverTestViewModel
-                                     {
-                                         TestId = test.Id,
-                                         Name = test.Name,
-                                         UserTestId = test.Id,
-                                         Score = user_test.QuestionsRight ?? 0,
-                                         IsLocked = test.Id > 0 ? (user_test.IsLocked.Value == true ? true : false) : false,
-                                         QuestionsAttend = user_test.QuestionsAttend ?? 0,
-                                         QuestionsRight = user_test.QuestionsRight ?? 0,
-                                         PassingPercentage = (iCheckPercentage),
-                                         StartDate = user_test.StartDate,
 
-                                     }
-                                  ).ToList();
-
-                if (employee.UserId > 0)
-                {
-
-
-
-                    foreach (var item in employee.TestList)
-                    {
-                        var totalQuestions = _dbContext.tbl_Questions.Where(w => w.IsActive == true && w.TestId == item.TestId).Count();
-                        item.TotalQuestion = totalQuestions;
-                    }
-
-                    var videoDuration = _dbContext.tbl_AttendentTestVideos.Where(w => w.UserId == employee.UserId).Sum(s => s.Duration);
-                    employee.VideoDuration = videoDuration;
-
-
-                }
 
             }
 
 
+            if (_rolename.ToLower() == "hr")
+            {
+                careGiverList = careGiverList.Where(w => w.HrGroupId == _HrGroupId).ToList();
+            }
 
             return PartialView("_Table", careGiverList);
         }
+
+        public ActionResult Add()
+        {
+            CareGiverViewModel careGiver = new CareGiverViewModel();
+            careGiver.HrGroupList = _dbContext.tbl_HrGroups.Where(w => w.IsActive == true)
+              .Select(s => new HrGroupViewModel
+              {
+                  Id = s.Id,
+                  Name = s.Name
+
+              }).ToList();
+            return View(careGiver);
+        }
+
+        [HttpPost]
+        public ActionResult Add(CareGiverViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    model.Email = model.Email.Trim();
+                    var checkAttendent = _dbContext.tbl_Attendants.Where(w => w.Email == model.Email).FirstOrDefault();
+                    if (checkAttendent == null)
+                    {
+                        checkAttendent = _dbContext.tbl_Attendants.Where(w => w.EmployeeNo == model.EmployeeNo).FirstOrDefault();
+                        if (checkAttendent == null)
+                        {
+                            Attendant attendant = new Attendant()
+                            {
+                                FirstName = model.FirstName,
+                                MiddleName = model.MiddleName,
+                                LastName = model.LastName,
+                                EmployeeNo = model.EmployeeNo,
+                                Email = model.Email,
+                                CreatedDate = DateTime.Now,
+                                CreatedBy = UserId,
+                                HrGroupId = model.HrGroupId
+
+                            };
+
+                            _dbContext.tbl_Attendants.Add(attendant);
+                            _dbContext.SaveChanges();
+
+                            ViewBag.SuccessMessage = "Care Giver added successfully";
+
+                        }
+                        else
+                        {
+                            ViewBag.ErrorMessage = "Employee no is already exists";
+
+                        }
+
+
+
+
+
+
+                    }
+                    else
+                    {
+                        ViewBag.ErrorMessage = "Email is already exists";
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            model.HrGroupList = _dbContext.tbl_HrGroups.Where(w => w.IsActive == true)
+                  .Select(s => new HrGroupViewModel
+                  {
+                      Id = s.Id,
+                      Name = s.Name
+
+                  }).ToList();
+
+            return View(model);
+        }
+
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);

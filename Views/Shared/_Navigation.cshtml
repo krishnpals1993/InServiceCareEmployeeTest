@@ -5,6 +5,8 @@
     String Username = Convert.ToString(@HttpContextAccessor.HttpContext.Session.GetString("Username"));
     String RoleName = Convert.ToString(@HttpContextAccessor.HttpContext.Session.GetString("RoleName"));
     String ShowTest = Convert.ToString(@HttpContextAccessor.HttpContext.Session.GetString("ShowTest"));
+    List<MenuViewModel> UserMenus = JsonConvert.DeserializeObject<List<MenuViewModel>>(@HttpContextAccessor.HttpContext.Session.GetString("UserMenus"));
+    List<String> ParentMenus = UserMenus.Select(s => s.Parent).Distinct().ToList();
 
 }
 <div class="row border-bottom white-bg">
@@ -18,58 +20,42 @@
 
         <div class="navbar-collapse collapse" id="navbar">
             <ul class="nav navbar-nav mr-auto">
-                @if (RoleName == "Admin" || RoleName == "Manager" || RoleName == "Teacher")
+
+                @foreach (var parent in ParentMenus)
                 {
-                    <li class="dropdown">
-                        <a aria-expanded="false" role="button" href="#" class="dropdown-toggle"
-                           data-toggle="dropdown">CareGiver</a>
-                        <ul role="menu" class="dropdown-menu">
-                            <li><a href="@Url.Action("Import", "CareGiver")">Import</a></li>
-                            <li><a href="@Url.Action("List", "CareGiver")">List</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a aria-expanded="false" role="button" href="#" class="dropdown-toggle"
-                           data-toggle="dropdown">Test Setup</a>
-                        <ul role="menu" class="dropdown-menu">
-                            <li><a href="@Url.Action("Add", "Test")">Add Test</a></li>
-                            <li><a href="@Url.Action("List", "Test")">Test List</a></li>
-                            <li><a href="@Url.Action("Add", "TestSetup")">Add Question</a></li>
-                            <li><a href="@Url.Action("List", "TestSetup")">Question List</a></li>
-                            <li><a href="@Url.Action("Add", "Document")">Add Document</a></li>
-                            <li><a href="@Url.Action("List", "Document")">Document List</a></li>
-                            <li><a href="@Url.Action("PassingPercentage", "TestSetup")">Passing Percentage</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a aria-expanded="false" role="button" href="#" class="dropdown-toggle"
-                           data-toggle="dropdown">Season</a>
-                        <ul role="menu" class="dropdown-menu">
-                            <li><a href="@Url.Action("Add", "Season")">Add</a></li>
-                            <li><a href="@Url.Action("List", "Season")">List</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a aria-expanded="false" role="button" href="#" class="dropdown-toggle"
-                           data-toggle="dropdown">User</a>
-                        <ul role="menu" class="dropdown-menu">
-                            <li><a href="@Url.Action("Add", "User")">Add</a></li>
-                            <li><a href="@Url.Action("List", "User")">List</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="@Url.Action("List", "Role")">Role</a></li>
-                    <li><a href="@Url.Action("Video", "Test")">Videos</a></li>
+                    var menus = UserMenus.Where(w => w.Parent == parent).ToList();
+
+                    @if (menus.Count() == 1)
+                    {
+                        if (parent == menus[0].Name)
+
+                        {
+                            <li>
+                                <a href="@Url.Action(menus[0].Action, menus[0].Controller)">
+                                    @menus[0].Name
+                                </a>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="dropdown">
+                            <a aria-expanded="false" role="button" href="#" class="dropdown-toggle"
+                               data-toggle="dropdown">@parent</a>
+                            <ul role="menu" class="dropdown-menu">
+                                @foreach (var menu in menus)
+                                {
+
+                                    <li><a href="@Url.Action(menu.Action, menu.Controller)">@menu.Name</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
 
                 }
-                else
-                {
-                    @if (ShowTest == "True")
-                    {
-                        <li><a href="@Url.Action("Exam", "Attendant")">Test</a></li>
-                    }
-                    <li><a href="@Url.Action("Videos", "Test")">Videos</a></li>
-                }
             </ul>
+
             <ul class="nav navbar-top-links navbar-right">
                 <li>
                     <span class="m-r-sm welcome-message" style="color:#337ab7">Welcome @Username</span>

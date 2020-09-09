@@ -20,6 +20,12 @@
                         {
                             <span class="label label-warning">Not Registered</span>
                         }
+                        @if (Model.TestList.Where(w => w.IsLocked == true).Count() > 0)
+                        {
+                            <a class="btn btn-primary btn-xs" style="margin-left:10px" target="_blank" href="/PdfGenerator/CareGiversTest/@Model.UserId">
+                        <i style="margin-right: 5px;" class="fa fa-print"></i>Print Completed Test</a>
+                        }
+
                     </h3>
 
                 </div>
@@ -69,7 +75,7 @@
                                     }
                                     else
                                     {
-                                        <span class="label label-danger">
+                                        <span class="label label-danger" style="margin-right:10px">
                                             Falied
                                         </span>
 

@@ -25,6 +25,9 @@
                                     Role
                                 </th>
                                 <th>
+                                    HR Group
+                                </th>
+                                <th>
                                     Status
                                 </th>
                                 <th>
@@ -42,7 +45,10 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.RoleName)
                                     </td>
-                                    <th>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.HrGroupName)
+                                    </td>
+                                    <td>
                                         @if (item.IsActive ?? true)
                                         {
                                             <span class="badge badge-primary">Active</span>
@@ -51,7 +57,7 @@
                                         {
                                             <span class="badge badge-danger">Deleted</span>
                                         }
-                                    </th>
+                                    </td>
                                     <td>
                                         @if (item.IsActive ?? true)
                                         {

@@ -1,0 +1,87 @@
+﻿@model EmployeeTest.Models.HrGroupViewModel
+
+@{
+    ViewData["Title"] = "Edit Hr Group";
+}
+@using Microsoft.Extensions.Options;
+@inject IOptions<Appsettings> Settings
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h3>@ViewData["Title"]</h3>
+                </div>
+                <div class="ibox-content">
+                    <form method="post" asp-action="Edit">
+
+                        @Html.HiddenFor(h => h.Id)
+                        <div class="row form-group ">
+                            <div class="col-md-1">
+                                <label asp-for="Name" class="col-form-label"></label>
+                            </div>
+                            <div class="col-md-3">
+                                <input asp-for="Name" class="form-control" placeholder="Name" maxlength="150" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+
+                        </div>
+
+
+               
+
+                        @if (ViewBag.SuccessMessage != null)
+                        {
+                            <p class="text-primary">@ViewBag.SuccessMessage</p>
+                        }
+                        @if (ViewBag.ErrorMessage != null)
+                        {
+                            <p class="text-danger" >@ViewBag.ErrorMessage</p>
+                        }
+
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group row">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <a class="btn btn-white btn-sm" asp-action="List">Cancel</a>
+                                <button class="btn btn-primary btn-sm" type="submit">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <environment names="Development,Staging,Production">
+        <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />
+        <link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    </environment>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+           
+        var SuccessMessage = '@ViewBag.SuccessMessage';
+        var ErrorMessage = '@ViewBag.ErrorMessage';
+        if (SuccessMessage) {
+            swal(SuccessMessage, "", "success");
+           setTimeout(function () { window.location.href = "@Settings.Value.WebBaseURL/HrGroup/List"; }, 750);
+
+        }
+          if (ErrorMessage) {
+            swal(ErrorMessage, "", "error");
+        }
+
+        })
+
+    </script>
+}

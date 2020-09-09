@@ -1,0 +1,40 @@
+.header {
+    text-align: center;
+    color: black;
+    padding-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    
+}
+
+.testheader {
+    padding-top: 20px;
+    text-align: center;
+    min-height:850px
+}
+
+td, th {
+    border: 1px solid gray;
+    padding: 15px;
+    font-size: 15px;
+    text-align: center;
+
+
+}
+
+.cname {
+font-size:18px;
+font-weight:bold
+}
+.tname {
+    font-weight: bold
+}
+
+table th {
+    background-color: #2d4154;
+    color: white;
+}

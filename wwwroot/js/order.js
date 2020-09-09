@@ -2,11 +2,10 @@
 
 $(() => {
     if ($('#fingers10').length !== 0) {
- 
+
         var table = $('#fingers10').DataTable({
-            "scrollY": "" + (window.outerHeight - 375) + "px",
-            "scrollX": "" + (window.outerWidth - 300) + "px",
-            "scrollCollapse": true,
+            //"scrollX": true,
+            //"scrollY": "" + (window.outerHeight - 375) + "px",
             language: {
                 processing: "Loading Data...",
                 zeroRecords: "No matching records found"
@@ -14,320 +13,151 @@ $(() => {
             processing: true,
             serverSide: true,
             orderCellsTop: true,
-            searching:true,
-            autoWidth: true,
+            searching: true,
+           // autoWidth: true,
             deferRender: true,
             "pageLength": 10,
-            "lengthChange": false,
-            dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6 text-right"l>><"row"<"col-sm-12"tr>><"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            "lengthChange": true,
+            //dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6 text-right"l>><"row"<"col-sm-12"tr>><"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            dom: '<"html5buttons"B>lTfgitp',
             buttons: [
-                
+                { extend: 'copy' },
+                {
+                    extend: 'csv', exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5]
+                    }
+                },
+                {
+                    extend: 'excel', title: 'CareGiverList'
+                },
+
+                {
+                    extend: 'pdf', title: 'CareGiverList',
+                    customize: function (doc) {
+                        doc.pageMargins = [10, 10, 10, 10];
+                        doc.defaultStyle.fontSize = 7;
+                        doc.styles.tableHeader.fontSize = 7;
+                        doc.styles.title.fontSize = 9;
+                        // Remove spaces around page title
+                        doc.content[0].text = "Standard Precautions HIPPA \n Emergency Preparedness Home Safety";
+                        doc.content[1].table.widths =
+                            Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                    }
+                },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
             ],
             ajax: {
                 type: "POST",
-                url: '/Order/LoadTable/',
+                url: '/CareGiver/LoadTable/',
                 contentType: "application/json; charset=utf-8",
                 async: true,
                 data: function (data) {
                     let additionalValues = [];
-                    additionalValues[0] = $("#ordernum").val();
-                    additionalValues[1] = $("#Name").val();
-                    additionalValues[2] = $("#Shipdate").val();
+                    additionalValues[0] = $("#startDate").val();
+                    additionalValues[1] = $("#endDate").val();
                     data.AdditionalValues = additionalValues;
-
                     return JSON.stringify(data);
-                }
+                },
+                beforeSend: function () {
+                    // Here, manually add the loading message.
+                    $('#fingers10 > tbody').html(
+                        '<tr class="odd">' +
+                        '<td valign="top" colspan="10" class="dataTables_empty">Loading&hellip;</td>' +
+                        '</tr>'
+                    );
+                },
             },
             columns: [
                 {
-                    orderable: false,
-                  
-                    data: "Action",
-                    render: function (data, type, row) {
+                    title: "First Name",
+                    data: "FirstName",
+                    name: "co"
 
-                        return `<div>
-                                    <a   href="#" class="btnEdit" data-key="${row.ordernum}">Detail</button>
-                                 </div>`;
+                },
+                {
+                    title: "Middle Name",
+                    data: "MiddleName",
+                    name: "co"
+                },
+                {
+
+                    title: "Last Name",
+                    data: "LastName",
+                    name: "co"
+                },
+                {
+                    title: "Email",
+                    data: "Email",
+                    name: "co"
+                },
+                {
+                    title: "Employee No",
+                    data: "EmployeeNo",
+                    name: "co"
+                },
+                {
+                    title: "Hr Group",
+                    data: "HrGroupName",
+                    name: "co"
+                },
+                {
+                    title: "Test Status",
+                    data: "PassedTest",
+                    searchable: false,
+                    render: function (data, type, row) {
+                        return '<a href="ViewTest/' + row.EmployeeId + '">' + row.PassedTest + '  of ' + row.Totaltest + ' passed</a>';
                     }
                 },
                 {
-                    orderable: false,
-                    data: "Notes",
+                    title: "Exam Date",
                     render: function (data, type, row) {
-                        if (row.NoteCount > 0) {
-                            return `<a data-toggle="modal" data-target="#notes"
-                                               onclick="openNote(`+ row.ordernum + `,'` + row.Orderdate+`')" href="#">
-                                                <i class="fa fa-sticky-note-o"></i>
-                                            </a>`;
+                        if (row.ExamDate)
+                            return window.moment(row.ExamDate).format("MM/DD/YYYY");
+                        else
+                            return null;
+                    },
+                    data: "ExamDate",
+                    name: "eq"
+                },
+                {
+                    title: "Action",
+                    data: "UserId",
+                    searchable: false,
+                    render: function (data, type, row) {
+                        if (row.UserId === 0) {
+                            if (row.ValidEmail) {
+                                return '<a href="#" onclick="sendEmail(\'' + row.Email + '\')">Send Registration Link</a>';
+                            }
+                            else {
+                                return '<span class="label label-danger">Invalid Email</span>';
+                            }
                         }
                         else {
-                            return ``;
+                            return '<a href="#" onclick="sendEmailLogin(\'' + row.Email + '\')">Send Login Link</a>';
                         }
-
-
-                    }
-
-                },
-                {
-                    data: "Shipdate",
-                    render: function (data, type, row) {
-                        if (data) {
-                            console.log(data);
-                            var date1 = new window.moment(window.moment().format("MM/DD/YYYY"));
-                            var date2 = new window.moment(data);
-                            const diffTime = (date2 - date1);
-                            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-                            var formattedDate = window.moment(data).format("MM/DD/YYYY");
-                            if (diffDays == 0) {
-                                return '<span class="label label-warning">' + formattedDate + '</span>';
-                            }
-                            else if (diffDays >= 1 && diffDays < 3) {
-                                return '<span class="label label-success">' + formattedDate + '</span>';
-                            }
-                            else if (diffDays >= 3 && diffDays < 7) {
-                                return '<span class="label label-primary">' + formattedDate + '</span>';
-                            }
-                            else if (diffDays >= 7) {
-                                return '<span class="label label-info">' + formattedDate + '</span>';
-                            }
-                            else if (diffDays < 0) {
-                                return '<span class="label label-danger">' + formattedDate + '</span>';
-                            }
-                            return formattedDate;
-                        }
-                        else
-                            return null;
-                    },
-                    searchable: false,
-                    name: "eq"
-                },
-                {
-                    data: "Canceldate",
-                    render: function (data, type, row) {
-                        if (data)
-                            return window.moment(data).format("MM/DD/YYYY");
-                        else
-                            return null;
-                    },
-                    searchable: false,
-                    name: "eq"
-                },
-                {
-                    data: "ordernum",
-                    name: "co"
-                },
-                {
-                    data: "Custnum",
-                    name: "co"
-                },
-                
-                {
-                    data: "Orderdate",
-                    searchable: false,
-                    render: function (data, type, row) {
-                        if (data)
-                            return window.moment(data).format("MM/DD/YYYY");
-                        else
-                            return null;
-                    },
-                    name: "eq"
-                },
-                {
-                    data: "Name",
-                    name: "co"
-                },
-                
-                {
-                    data: "Shipname",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "Shipaddress1",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "Shipaddress2",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "Shipaddress3",
-                    searchable: false,
-                    name: "co"
-
-                },
-                {
-                    data: "Address1",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "Address2",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "Address3",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "Terms",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "Via",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "Backorder",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "Tax",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "Ponum",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "Shippeddate",
-                    searchable: false,
-                    render: function (data, type, row) {
-                        if (data)
-                            return window.moment(data).format("MM/DD/YYYY");
-                        else
-                            return null;
-                    },
-                    name: "eq"
-                },
-                
-                {
-                    data: "Edidate",
-                    render: function (data, type, row) {
-                        if (data)
-                            return window.moment(data).format("MM/DD/YYYY");
-                        else
-                            return null;
-                    },
-                    searchable: false,
-                    name: "eq"
-                },
-                {
-                    data: "Terminal",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "Custnote",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "clerk",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "Poammount",
-                    searchable: false,
-                    name: "eq"
-                },
-                {
-                    data: "Commission",
-                    searchable: false,
-                    name: "eq"
-                },
-                {
-                    data: "Status",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "D1",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "D2",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "Creditmemo",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "Storenum",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "Dept",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "Ordertype",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "WeborderId",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "IsOpenOrder",
-                    searchable: false,
-                    name: "co",
-                    render: function (data, type, row) {
-                        if (data) {
-                            return `<span class="badge badge-success">Yes</span>`;
-                        }
-                        else {
-                            return `<span class="badge badge-danger">No</span>`;
-                        }
-                     
                     }
                 },
                 {
-                    data: "Credit",
-                    searchable: false,
+                    title: "Video (Time)",
+                    data: "VideoDuration",
+                    render: function (data, type, row) {
+                        return '<span style="display:none" class="cUserId">' + row.UserId + '</span>'+ secondsToHms(data);
+                    },
                     name: "co"
-                },
-                {
-                    data: "Freight",
-                    searchable: false,
-                    name: "eq"
-                },
-                {
-                    data: "Slnum",
-                    name: "co",
-                    searchable: false
-                },
-                {
-                    data: "Slnum2",
-                    searchable: false,
-                    name: "co"
-                },
-                {
-                    data: "D0",
-                    searchable: false,
-                    name: "co"
-                },
-                
-                
+                }
+
+
             ]
         });
 
@@ -341,18 +171,30 @@ $(() => {
                     });
         });
 
-        $("input").on("change", function (e) {
+        //$("input").on("change", function (e) {
+        //    table.draw();
+        //});
+
+        $(".search").on("click", function (e) {
+
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+            if ((!startDate) || (!endDate)) {
+                swal("Please select both dates", "", "error");
+                return;
+            }
+            console.log(startDate);
+            console.log(endDate);
+            if (startDate > endDate) {
+                swal("From date should be greater or equal to current date", "", "error");
+                return;
+            }
             table.draw();
+            $("#btnPrint").show();
         });
 
-        $(document)
-            .off('click', '.btnEdit')
-            .on('click', '.btnEdit', function () {
-                const id = $(this).attr('data-key');
-                window.location.href = window.baseUrl+"/Order/Detail/" + id;
-                 
-            });
 
-      
+
+
     }
 });

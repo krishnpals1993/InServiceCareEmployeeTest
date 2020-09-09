@@ -1,4 +1,5 @@
-﻿@{
+﻿@model EmployeeTest.Models.AdminVideoViewModel
+@{
     ViewData["Title"] = "Videos";
     var Status = ViewBag.Status;
 }
@@ -15,8 +16,18 @@
                 <div class="col-lg-4">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Video 1</h5>
+                            <div class="row">
+                                <div class="col-lg-3"><h5>Video 1</h5></div>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.Video1,
+                       new SelectList(Model.TestList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"),
+                       "Select Test", new { onchange = "changeTest(1)", @class = "form-control test", @placeholder = "Select Test" })
+
+                                </div>
+                            </div>
+
                         </div>
+
 
                         <div class="ibox-content">
                             <video id="vid1" width="320" height="240" controls controlsList="nodownload">
@@ -29,7 +40,15 @@
                 <div class="col-lg-4" id="vid2Panel">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Video 2</h5>
+                            <div class="row">
+                                <div class="col-lg-3"><h5>Video 2</h5></div>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.Video2,
+                       new SelectList(Model.TestList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"),
+                       "Select Test", new { onchange = "changeTest(2)", @class = "form-control test", @placeholder = "Select Test" })
+
+                                </div>
+                            </div>
                         </div>
 
                         <div class="ibox-content">
@@ -56,7 +75,15 @@
                 <div class="col-lg-4 vid3Panel">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Video 1</h5>
+                            <div class="row">
+                                <div class="col-lg-3"><h5>Video 1</h5></div>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.Video3,
+                       new SelectList(Model.TestList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"),
+                       "Select Test", new { onchange = "changeTest(3)", @class = "form-control test", @placeholder = "Select Test" })
+
+                                </div>
+                            </div>
                         </div>
 
                         <div class="ibox-content">
@@ -70,7 +97,15 @@
                 <div class="col-lg-4" id="vid4Panel">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Video 2</h5>
+                            <div class="row">
+                                <div class="col-lg-3"><h5>Video 2</h5></div>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.Video4,
+                       new SelectList(Model.TestList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"),
+                       "Select Test", new { onchange = "changeTest(4)", @class = "form-control test", @placeholder = "Select Test" })
+
+                                </div>
+                            </div>
                         </div>
 
                         <div class="ibox-content">
@@ -96,7 +131,15 @@
                 <div class="col-lg-4 vid5Panel">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Video 1</h5>
+                            <div class="row">
+                                <div class="col-lg-3"><h5>Video 1</h5></div>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.Video5,
+                       new SelectList(Model.TestList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"),
+                       "Select Test", new { onchange = "changeTest(5)", @class = "form-control test", @placeholder = "Select Test" })
+
+                                </div>
+                            </div>
                         </div>
 
                         <div class="ibox-content">
@@ -110,7 +153,15 @@
                 <div class="col-lg-4" id="vid6Panel">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Video 2</h5>
+                            <div class="row">
+                                <div class="col-lg-3"><h5>Video 2</h5></div>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.Video6,
+                       new SelectList(Model.TestList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"),
+                       "Select Test", new { onchange = "changeTest(6)", @class = "form-control test", @placeholder = "Select Test" })
+
+                                </div>
+                            </div>
                         </div>
 
                         <div class="ibox-content">
@@ -136,7 +187,15 @@
                 <div class="col-lg-4 vid7Panel">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Video 1</h5>
+                            <div class="row">
+                                <div class="col-lg-3"><h5>Video 1</h5></div>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.Video7,
+                       new SelectList(Model.TestList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"),
+                       "Select Test", new { onchange = "changeTest(7)", @class = "form-control test", @placeholder = "Select Test" })
+
+                                </div>
+                            </div>
                         </div>
 
                         <div class="ibox-content">
@@ -150,7 +209,15 @@
                 <div class="col-lg-4" id="vid8Panel">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Video 2</h5>
+                            <div class="row">
+                                <div class="col-lg-3"><h5>Video 2</h5></div>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.Video8,
+                       new SelectList(Model.TestList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"),
+                       "Select Test", new { onchange = "changeTest(8)", @class = "form-control test", @placeholder = "Select Test" })
+
+                                </div>
+                            </div>
                         </div>
 
                         <div class="ibox-content">
@@ -176,7 +243,15 @@
                 <div class="col-lg-4 vid9Panel">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Video 1</h5>
+                            <div class="row">
+                                <div class="col-lg-3"><h5>Video 1</h5></div>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.Video9,
+                       new SelectList(Model.TestList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"),
+                       "Select Test", new { onchange = "changeTest(9)", @class = "form-control test", @placeholder = "Select Test" })
+
+                                </div>
+                            </div>
                         </div>
 
                         <div class="ibox-content">
@@ -200,7 +275,15 @@
                 <div class="col-lg-4 vid10Panel">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Video 1</h5>
+                            <div class="row">
+                                <div class="col-lg-3"><h5>Video 1</h5></div>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.Video10,
+                       new SelectList(Model.TestList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"),
+                       "Select Test", new { onchange = "changeTest(10)", @class = "form-control test", @placeholder = "Select Test" })
+
+                                </div>
+                            </div>
                         </div>
 
                         <div class="ibox-content">
@@ -224,7 +307,15 @@
                 <div class="col-lg-4 vid11Panel">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Video 1</h5>
+                            <div class="row">
+                                <div class="col-lg-3"><h5>Video 1</h5></div>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.Video11,
+                       new SelectList(Model.TestList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"),
+                       "Select Test", new { onchange = "changeTest(11)", @class = "form-control test", @placeholder = "Select Test" })
+
+                                </div>
+                            </div>
                         </div>
 
                         <div class="ibox-content">
@@ -238,7 +329,15 @@
                 <div class="col-lg-4" id="vid12Panel">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Video 2</h5>
+                            <div class="row">
+                                <div class="col-lg-3"><h5>Video 2</h5></div>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.Video12,
+                       new SelectList(Model.TestList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"),
+                       "Select Test", new { onchange = "changeTest(12)", @class = "form-control test", @placeholder = "Select Test" })
+
+                                </div>
+                            </div>
                         </div>
 
                         <div class="ibox-content">
@@ -252,7 +351,15 @@
                 <div class="col-lg-4" id="vid13Panel">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Video 3</h5>
+                            <div class="row">
+                                <div class="col-lg-3"><h5>Video 3</h5></div>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.Video13,
+                       new SelectList(Model.TestList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"),
+                       "Select Test", new { onchange = "changeTest(13)", @class = "form-control test", @placeholder = "Select Test" })
+
+                                </div>
+                            </div>
                         </div>
 
                         <div class="ibox-content">
@@ -266,7 +373,15 @@
                 <div class="col-lg-4" id="vid14Panel">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Video 4</h5>
+                            <div class="row">
+                                <div class="col-lg-3"><h5>Video 4</h5></div>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.Video14,
+                       new SelectList(Model.TestList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"),
+                       "Select Test", new { onchange = "changeTest(14)", @class = "form-control test", @placeholder = "Select Test" })
+
+                                </div>
+                            </div>
                         </div>
 
                         <div class="ibox-content">
@@ -290,7 +405,15 @@
                 <div class="col-lg-4 vid15Panel">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Video 1</h5>
+                            <div class="row">
+                                <div class="col-lg-3"><h5>Video 15</h5></div>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.Video15,
+                       new SelectList(Model.TestList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"),
+                       "Select Test", new { onchange = "changeTest(15)", @class = "form-control test", @placeholder = "Select Test" })
+
+                                </div>
+                            </div>
                         </div>
 
                         <div class="ibox-content">
@@ -304,7 +427,15 @@
                 <div class="col-lg-4" id="vid16Panel">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>Video 2</h5>
+                            <div class="row">
+                                <div class="col-lg-3"><h5>Video 2</h5></div>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.Video16,
+                       new SelectList(Model.TestList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"),
+                       "Select Test", new { onchange = "changeTest(16)", @class = "form-control test", @placeholder = "Select Test" })
+
+                                </div>
+                            </div>
                         </div>
 
                         <div class="ibox-content">
@@ -340,6 +471,10 @@
         video::-webkit-media-controls-panel {
             width: calc(100% + 30px); /* Adjust as needed */
         }
+
+        .test {
+            margin-top: -3%
+        }
     </style>
 }
 
@@ -352,6 +487,27 @@
 
     <script type="text/javascript">
 
+        function changeTest(vid) {
+            var dataToSend = {
+                vid: vid,
+                testId: $("#Video" + vid).val() ? $("#Video" + vid).val() : 0
+            };
+            $.ajax({
+                url: "/Test/UpdateVideoTest",
+                type: "POST",
+                dataType: "json",
+                data: dataToSend,
+                success: function (data) {
+                    if (data.Status == "1") {
+                        swal(data.Message, "", "success")
+                    }
+                    else {
+                        swal(data.Message, "", "error")
+                    }
+                }
+            })
+
+        }
 
     </script>
 

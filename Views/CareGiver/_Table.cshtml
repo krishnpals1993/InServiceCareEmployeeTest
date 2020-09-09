@@ -12,6 +12,7 @@
             <th>
                 Last Name
             </th>
+
             <th>
                 Email
             </th>
@@ -19,11 +20,15 @@
                 Employee No
             </th>
             <th>
+                Hr Group
+            </th>
+            <th>
                 Test Status
             </th>
             <th>Exam Date</th>
             <th style="min-width: 180px;">Action</th>
             <th>Video (Time)</th>
+            <th style="display:none"></th>
 
         </tr>
     </thead>
@@ -41,25 +46,35 @@
                     @Html.DisplayFor(modelItem => item.LastName)
                 </td>
                 <td>
+
                     @Html.DisplayFor(modelItem => item.Email)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.EmployeeNo)
                 </td>
-
                 <td>
-                    @Html.ActionLink(""+item.PassedTest+" of "+@item.Totaltest+" passed", "ViewTest", "CareGiver", new { id = item.EmployeeId }, new { @class = " ", style = " " })
+                    @Html.DisplayFor(modelItem => item.HrGroupName)
+                </td>
+                <td>
+                    @Html.ActionLink("" + item.PassedTest + " of " + @item.Totaltest + " passed", "ViewTest", "CareGiver", new { id = item.EmployeeId }, new { @class = " ", style = " " })
                 </td>
                 <td class="">
-                    @if (item.StartDate != null)
+                    @if (item.ExamDate != null)
                     {
-                        <span>@item.StartDate.Value.ToString("MM/dd/yyyy")</span>
+                        <span>@item.ExamDate.Value.ToString("MM/dd/yyyy")</span>
                     }
                 </td>
                 <td style="min-width: 150px;">
                     @if (item.UserId == 0)
                     {
-                        <a href="#" onclick="sendEmail('@item.Email')">Send Registration Link</a>
+                        @if (item.ValidEmail)
+                        {
+                            <a href="#" onclick="sendEmail('@item.Email')">Send Registration Link</a>
+                        }
+                        else
+                        {
+                            <span class="label label-danger">Invalid Email</span>
+                        }
                     }
                     else
                     {
@@ -70,10 +85,11 @@
                 </td>
 
 
+
                 <td class="videoDuration">
                     @Html.DisplayFor(modelItem => item.VideoDuration)
                 </td>
-
+                <td style="display:none" class="cUserId">@item.UserId</td>
             </tr>
         }
     </tbody>
