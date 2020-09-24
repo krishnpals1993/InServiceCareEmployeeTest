@@ -37,18 +37,31 @@ namespace EmployeeTest.Controllers
             {
 
                 users = (from user in _dbContext.tbl_Users
-                         join hrGroup in _dbContext.tbl_HrGroups
-                         on user.HrGroupId equals hrGroup.Id
-                         into hrGroup
-                         from hrGroup1 in hrGroup.DefaultIfEmpty()
                          where user.RoleId == hrRole
                          select new UserViewModel
                          {
                              UserId = user.UserId,
                              Username = user.Username,
-                             HrGroupName = hrGroup1.Name
-                             
+                             HrGroupIds = user.HrGroupId
+
                          }).ToList();
+
+                var hrGroupNames = _dbContext.tbl_HrGroups.Where(w => w.IsActive == true)
+                        .Select(s => new HrGroupViewModel
+                        {
+                            Id = s.Id,
+                            Name = s.Name
+
+                        }).ToList();
+
+                foreach (var user in users)
+                {
+                    if (Convert.ToString(user.HrGroupIds) != "")
+                    {
+                        user.HrGroupName = String.Join(',', hrGroupNames.Where(w => user.HrGroupIds.Contains("/" + w.Id.ToString() + "/")).Select(s => s.Name).ToList());
+                    }
+                }
+
 
             }
             catch (Exception ex)
@@ -58,7 +71,7 @@ namespace EmployeeTest.Controllers
             return View(users);
         }
 
-       
+
 
         public ActionResult Edit(string id)
         {
@@ -74,7 +87,9 @@ namespace EmployeeTest.Controllers
                     {
                         model.UserId = checkUser.UserId;
                         model.Username = checkUser.Username;
-                        model.HrGroupId = checkUser.HrGroupId ?? 0;
+                        var csvHrGroup = Convert.ToString(checkUser.HrGroupId) == "" ? new List<String>() :
+                                         checkUser.HrGroupId.Split(',').ToList().Select(s => s.Replace(@"/", "")).ToList();
+                        model.HrGroupName = String.Join(',', csvHrGroup);
                         model.HrGroupList = _dbContext.tbl_HrGroups.Where(w => w.IsActive == true)
                         .Select(s => new HrGroupViewModel
                         {
@@ -115,7 +130,8 @@ namespace EmployeeTest.Controllers
                     }
                     else
                     {
-                        checkHrGroup.HrGroupId = model.HrGroupId;
+                        var csvList = model.HrGroupIds.Select(s => "/" + s + "/").ToList();
+                        checkHrGroup.HrGroupId = String.Join(',' , csvList);
                         _dbContext.SaveChanges();
                         ViewBag.SuccessMessage = "Hr group updated successfully";
                     }

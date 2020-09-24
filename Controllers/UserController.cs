@@ -39,10 +39,6 @@ namespace EmployeeTest.Controllers
                 users = (from user in _dbContext.tbl_Users
                          join role in _dbContext.tbl_Roles
                          on user.RoleId equals role.RoleId
-                         join hrGroup in _dbContext.tbl_HrGroups
-                         on user.HrGroupId equals hrGroup.Id
-                         into hrGroup
-                         from hrGroup1 in hrGroup.DefaultIfEmpty()
                          join attedent in _dbContext.tbl_Attendants
                          on user.UserId equals attedent.UserId
                          into attedent
@@ -60,8 +56,24 @@ namespace EmployeeTest.Controllers
                              Username = user.Username,
                              Email = user.Email,
                              IsActive = user.IsActive,
-                             HrGroupName = hrGroup1.Name ?? hrGroup3.Name
+                             HrGroupIds = user.HrGroupId,
+                             HrGroupName =   hrGroup3.Name
                          }).ToList();
+                var hrGroupNames = _dbContext.tbl_HrGroups.Where(w => w.IsActive == true)
+                        .Select(s => new HrGroupViewModel
+                        {
+                            Id = s.Id,
+                            Name = s.Name
+
+                        }).ToList();
+
+                foreach (var user in users)
+                {
+                    if (Convert.ToString(user.HrGroupIds??"") != "")
+                    {
+                        user.HrGroupName = String.Join(',', hrGroupNames.Where(w => user.HrGroupIds.Contains("/" + w.Id.ToString() + "/")).Select(s => s.Name).ToList());
+                    }
+                }
 
             }
             catch (Exception ex)
@@ -174,6 +186,9 @@ namespace EmployeeTest.Controllers
                         _dbContext.tbl_Users.Add(user);
                         _dbContext.SaveChanges();
 
+                        var iHrGroupId = 0;
+                        int.TryParse(user.HrGroupId,out iHrGroupId);
+
                         if (model.iRoleId == 1)
                         {
                             Attendant attendant = new Attendant()
@@ -186,7 +201,7 @@ namespace EmployeeTest.Controllers
                                 CreatedDate = DateTime.Now,
                                 CreatedBy = UserId,
                                 UserId = user.UserId,
-                                HrGroupId = user.HrGroupId
+                                HrGroupId = iHrGroupId
 
                             };
 

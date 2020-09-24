@@ -18,6 +18,7 @@
                     <form method="post" asp-action="Edit">
 
                         @Html.HiddenFor(h => h.UserId)
+                        @Html.HiddenFor(h => h.HrGroupName)
                         <div class="row form-group ">
                             <div class="col-md-1">
                                 <label class="col-form-label">User name</label>
@@ -31,12 +32,14 @@
                                 <label class="col-form-label">Group </label>
                             </div>
                             <div class="col-md-3">
-                                @Html.DropDownListFor(model => model.HrGroupId, new SelectList(Model.HrGroupList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text"), "Select Group", new { @class = "form-control", @placeholder = "Select Group" })
-                                <span asp-validation-for="HrGroupId" class="text-danger"></span>
+                                @Html.DropDownListFor(model => model.HrGroupIds,
+                               new SelectList(Model.HrGroupList.Select(x => new { Value = x.Id, Text = x.Name }), "Value", "Text")
+                               , "Select Group", new { @class = "form-control chosen-select", @multiple = "", @placeholder = "Select Group" })
+                                <span asp-validation-for="HrGroupIds" class="text-danger"></span>
                             </div>
                         </div>
 
-                       
+
 
 
                         @if (ViewBag.SuccessMessage != null)
@@ -66,6 +69,7 @@
     <environment names="Development,Staging,Production">
         <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />
         <link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+        <link href="~/lib/chosen-js/chosen.css" rel="stylesheet" />
     </environment>
 }
 
@@ -73,10 +77,19 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="~/lib/sweetalert/dist/sweetalert.min.js"></script>
     <script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/lib/chosen-js/chosen.jquery.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
 
-           
+       $("#HrGroupIds option")[0].remove()
+
+        $(".chosen-select").chosen({ allow_single_deselect: true })
+
+            var checkHrGroupVal = $("#HrGroupName").val();
+            if (checkHrGroupVal) {
+                $("#HrGroupIds").val(checkHrGroupVal.split(",")).trigger("chosen:updated");
+            }
+
         var SuccessMessage = '@ViewBag.SuccessMessage';
         var ErrorMessage = '@ViewBag.ErrorMessage';
         if (SuccessMessage) {

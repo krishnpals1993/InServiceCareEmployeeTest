@@ -421,6 +421,7 @@ namespace EmployeeTest.Models
         public int HrGroupId { get; set; }
         public string HrGroupName { get; set; }
 
+        public string    HrGroupIds { get; set; }
     }
 
     public class CareGiverViewModel
@@ -428,6 +429,7 @@ namespace EmployeeTest.Models
 
         public List<HrGroupViewModel> HrGroupList { get; set; }
         public int UserId { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Please enter an email")]
         [Display(Name = "Email")]
@@ -468,6 +470,7 @@ namespace EmployeeTest.Models
         public HrGroupUserMappingViewModel()
         {
             HrGroupList = new List<HrGroupViewModel>();
+            HrGroupIds = new List<string>();
         }
 
         public List<HrGroupViewModel> HrGroupList { get; set; }
@@ -476,6 +479,7 @@ namespace EmployeeTest.Models
         [Required(ErrorMessage = "Please select hr group name")]
         public int HrGroupId { get; set; }
         public string HrGroupName { get; set; }
+        public List<string> HrGroupIds { get; set; }
 
     }
 

@@ -49,7 +49,7 @@ namespace EmployeeTest.Models
         public DateTime? CreatedDate { get; set; }
         public int? ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
-        public int? HrGroupId { get; set; }
+        public string HrGroupId { get; set; }
 
 
     }

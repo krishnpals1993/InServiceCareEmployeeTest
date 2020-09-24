@@ -1,7 +1,4 @@
-﻿"use strict";
-
-$(() => {
-    if ($('#fingers10').length !== 0) {
+﻿if ($('#fingers10').length !== 0) {
 
         var table = $('#fingers10').DataTable({
             //"scrollX": true,
@@ -14,7 +11,7 @@ $(() => {
             serverSide: true,
             orderCellsTop: true,
             searching: true,
-           // autoWidth: true,
+            // autoWidth: true,
             deferRender: true,
             "pageLength": 10,
             "lengthChange": true,
@@ -137,14 +134,17 @@ $(() => {
                     render: function (data, type, row) {
                         if (row.UserId === 0) {
                             if (row.ValidEmail) {
-                                return '<a href="#" onclick="sendEmail(\'' + row.Email + '\')">Send Registration Link</a>';
+                                return ' <span><a href="/CareGiver/Edit/' + row.EmployeeId + '">Edit</a>|</span >' +
+                                    '<a href="#" onclick="sendEmail(\'' + row.Email + '\')">Send Register Link</a>';
                             }
                             else {
-                                return '<span class="label label-danger">Invalid Email</span>';
+                                return ' <span><a href="/CareGiver/Edit/' + row.EmployeeId + '">Edit</a>|</span >' +
+                                    '<span class="label label-danger">Invalid Email</span>';
                             }
                         }
                         else {
-                            return '<a href="#" onclick="sendEmailLogin(\'' + row.Email + '\')">Send Login Link</a>';
+                            return ' <span><a href="/CareGiver/Edit/' + row.EmployeeId + '">Edit</a>|</span >' +
+                                '<a href="#" onclick="sendEmailLogin(\'' + row.Email + '\')">Send Login Link</a>';
                         }
                     }
                 },
@@ -152,7 +152,7 @@ $(() => {
                     title: "Video (Time)",
                     data: "VideoDuration",
                     render: function (data, type, row) {
-                        return '<span style="display:none" class="cUserId">' + row.UserId + '</span>'+ secondsToHms(data);
+                        return '<span style="display:none" class="cUserId">' + row.UserId + '</span>' + secondsToHms(data);
                     },
                     name: "co"
                 }
@@ -197,4 +197,3 @@ $(() => {
 
 
     }
-});

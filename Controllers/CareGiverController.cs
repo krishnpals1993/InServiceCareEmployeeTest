@@ -28,7 +28,7 @@ namespace EmployeeTest.Controllers
         private readonly IConfigurationProvider _mappingConfiguration;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private string _rolename = "";
-        private int _HrGroupId = 0;
+        private string _HrGroupId = "";
         private int UserId = 0;
         public CareGiverController(IOptions<Appsettings> appSettings, DBContext dbContext, IOptions<EmailSettings> emailSettings, IHttpContextAccessor HttpContextAccessor, IConfigurationProvider mappingConfiguration)
         {
@@ -38,7 +38,7 @@ namespace EmployeeTest.Controllers
             _httpContextAccessor = HttpContextAccessor;
             _mappingConfiguration = mappingConfiguration;
             _rolename = _session.GetString("RoleName");
-            int.TryParse(_session.GetString("HrGroupId"), out _HrGroupId);
+            _HrGroupId = _session.GetString("HrGroupId");
             int.TryParse(_session.GetString("UserId"), out UserId);
         }
 
@@ -67,7 +67,7 @@ namespace EmployeeTest.Controllers
                         isDateFilter = true;
                         var dateParts = column.Split("/");
 
-                       // var date = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+                        // var date = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
                         if (i == 0)
                         {
 
@@ -114,7 +114,7 @@ namespace EmployeeTest.Controllers
 
                 if (_rolename.ToLower() == "hr")
                 {
-                    employees = employees.Where(w => w.HrGroupId == _HrGroupId).AsQueryable();
+                    employees = employees.Where(w => _HrGroupId.Contains("/" + w.HrGroupId.ToString() + "/")).AsQueryable();
                 }
 
 
@@ -421,7 +421,7 @@ namespace EmployeeTest.Controllers
 
             if (_rolename.ToLower() == "hr")
             {
-                careGiverList = careGiverList.Where(w => w.HrGroupId == _HrGroupId).ToList();
+               // careGiverList = careGiverList.Where(w => w.HrGroupId == _HrGroupId).ToList();
             }
 
             return PartialView("_Table", careGiverList);
@@ -483,6 +483,89 @@ namespace EmployeeTest.Controllers
 
 
 
+
+                    }
+                    else
+                    {
+                        ViewBag.ErrorMessage = "Email is already exists";
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            model.HrGroupList = _dbContext.tbl_HrGroups.Where(w => w.IsActive == true)
+                  .Select(s => new HrGroupViewModel
+                  {
+                      Id = s.Id,
+                      Name = s.Name
+
+                  }).ToList();
+
+            return View(model);
+        }
+
+
+        public ActionResult Edit(int id)
+        {
+            CareGiverViewModel model = new CareGiverViewModel();
+            var checkCareGiver = _dbContext.tbl_Attendants.Where(w => w.Id == id).FirstOrDefault();
+
+            model.HrGroupList = _dbContext.tbl_HrGroups.Where(w => w.IsActive == true)
+              .Select(s => new HrGroupViewModel
+              {
+                  Id = s.Id,
+                  Name = s.Name
+
+              }).ToList();
+
+            model.FirstName = checkCareGiver.FirstName;
+            model.LastName = checkCareGiver.LastName;
+            model.MiddleName = checkCareGiver.MiddleName;
+            model.Email = checkCareGiver.Email;
+            model.HrGroupId = checkCareGiver.HrGroupId ?? 0;
+            model.Id = checkCareGiver.Id;
+            model.EmployeeNo = checkCareGiver.EmployeeNo;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(CareGiverViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    model.Email = model.Email.Trim();
+                    var checkAttendent = _dbContext.tbl_Attendants.Where(w => w.Email == model.Email && w.Id != model.Id).FirstOrDefault();
+                    if (checkAttendent == null)
+                    {
+                        checkAttendent = _dbContext.tbl_Attendants.Where(w => w.EmployeeNo == model.EmployeeNo && w.Id != model.Id).FirstOrDefault();
+                        if (checkAttendent == null)
+                        {
+
+                            checkAttendent = _dbContext.tbl_Attendants.Where(w => w.Id == model.Id).FirstOrDefault();
+
+                            checkAttendent.FirstName = model.FirstName;
+                            checkAttendent.LastName = model.LastName;
+                            checkAttendent.MiddleName = model.MiddleName;
+                            checkAttendent.Email = model.Email;
+                            checkAttendent.HrGroupId = model.HrGroupId;
+                            checkAttendent.EmployeeNo = model.EmployeeNo;
+
+                            _dbContext.SaveChanges();
+
+                            ViewBag.SuccessMessage = "Care Giver updated successfully";
+
+                        }
+                        else
+                        {
+                            ViewBag.ErrorMessage = "Employee no is already exists";
+
+                        }
 
                     }
                     else
